@@ -51,7 +51,18 @@ class PermissionsTest extends TestCase
         $role->givePermissionTo('foo');
     }
 
+    /** @test */
+    public function permissions_can_be_checked_with_laravel_auth_guard_can()
+    {
+        $activityA = factory(Permission::class)->create(['name' => 'can-fly']);
+        $activityB = factory(Permission::class)->create(['name' => 'can-run']);
+        $role = factory(Role::class)->create(['name' => 'Birdman']);
+        $role->givePermissionTo($activityA);
 
+        $user = $this->signIn();
+        $this->setAuthRole($role);
 
-
+        $this->assertTrue(auth()->user()->can('can-fly'));
+        $this->assertFalse(auth()->user()->can('can-run'));
+    }
 }

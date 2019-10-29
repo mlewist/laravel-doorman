@@ -19,7 +19,7 @@ The other thing that will be published are the migration files. Dont forget to r
 permission_role
 permissions
 roles
-role_user  
+role_user
 
 ## Checking permissions
 
