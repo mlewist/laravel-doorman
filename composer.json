@@ -1,5 +1,5 @@
 {
-    "name": "redsnapper/laravel-doorman",
+    "name": "rs/laravel-doorman",
     "description": "Will the doorman let you in? Only if you've got the right set of permissions.",
     "type": "laravel",
     "license": "mit",
