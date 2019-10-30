@@ -8,7 +8,7 @@ use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 trait IsDoormanRole
 {
-    use HasPermissions;
+    use HasPermissions, HasUsers;
 
     /**
      * @param  PermissionInterface|string  $permission

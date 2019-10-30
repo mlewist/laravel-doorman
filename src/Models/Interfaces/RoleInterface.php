@@ -4,15 +4,17 @@ namespace Redsnapper\LaravelDoorman\Models\Interfaces;
 
 interface RoleInterface
 {
-    function permissions();
+    public function permissions();
 
-    function givePermissionTo($permission);
+    public function givePermissionTo($permission);
 
-    function removePermissionTo($permission);
+    public function removePermissionTo($permission);
 
-    function getPermissionId($permission);
+    public function getPermissionId($permission);
 
-    function hasPermission($permission);
+    public function hasPermission($permission);
 
-    function getKey();
+    public function getKey();
+
+    public function getKeyName();
 }

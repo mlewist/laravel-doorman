@@ -4,7 +4,6 @@ namespace Redsnapper\LaravelDoorman\Models\Traits;
 
 use Exception;
 use Redsnapper\LaravelDoorman\Models\Interfaces\PermissionInterface;
-use Redsnapper\LaravelDoorman\Models\Interfaces\RoleInterface;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 trait GoesThroughDoorman
@@ -18,6 +17,7 @@ trait GoesThroughDoorman
      */
     public function hasPermissionTo(string $permission): bool
     {
+        /** @var PermissionInterface $permission */
         $permission = app(PermissionsRegistrar::class)->getPermissionClass()->findByName($permission);
 
         return ($permission->isActive() && $this->hasPermission($permission));
@@ -30,16 +30,5 @@ trait GoesThroughDoorman
           ->intersect(
             $this->roles->pluck(app(PermissionsRegistrar::class)->getRoleClass()->getKeyName())
           )->isNotEmpty();
-    }
-
-    /**
-     * @param  RoleInterface  $role
-     * @return $this
-     */
-    public function assignRole(RoleInterface $role): self
-    {
-        $this->roles()->syncWithoutDetaching($role->getKey());
-
-        return $this;
     }
 }

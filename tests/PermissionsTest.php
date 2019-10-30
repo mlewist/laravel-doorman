@@ -4,6 +4,7 @@ namespace Redsnapper\LaravelDoorman\Tests;
 
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExist;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Permission;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Role;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\User;
@@ -64,5 +65,27 @@ class PermissionsTest extends TestCase
 
         $this->assertTrue(auth()->user()->can('can-fly'));
         $this->assertFalse(auth()->user()->can('can-run'));
+    }
+
+    /** @test */
+    public function it_throws_a_permission_does_not_exist_for_non_existant_permissions()
+    {
+        $this->signIn();
+        $this->expectException(PermissionDoesNotExist::class);
+
+        $this->authUser->hasPermissionTo('non-existent');
+    }
+
+    /** @test */
+    public function it_throws_a_permission_does_not_exist_when_trying_to_verify_inactive_permissions()
+    {
+        $permission = factory(Permission::class)->create(['active' => false, 'name' => 'can-see-the-ground']);
+        $role = factory(Role::class)->create();
+        $role->givePermissionTo($permission);
+        $this->setAuthRole($role);
+
+        $this->expectException(PermissionDoesNotExist::class);
+
+        $this->authRole->hasPermission("can-see-the-ground");
     }
 }

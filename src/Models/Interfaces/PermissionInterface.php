@@ -17,4 +17,6 @@ interface PermissionInterface
     public function isActive(): bool;
 
     public function getKey();
+
+    public function getKeyName();
 }

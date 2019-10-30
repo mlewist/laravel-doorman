@@ -9,4 +9,6 @@ interface UserInterface
     public function hasPermission(PermissionInterface $permission);
 
     public function assignRole(RoleInterface $role);
+
+    public function hasRole($roles): bool;
 }

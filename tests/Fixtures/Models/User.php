@@ -9,7 +9,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Redsnapper\LaravelDoorman\Models\Interfaces\UserInterface;
 use Redsnapper\LaravelDoorman\Models\Traits\GoesThroughDoorman;
 
-class User extends Model implements AuthorizableContract, Authenticatable, UserInterface
+class User extends \Illuminate\Foundation\Auth\User implements UserInterface
 {
     use GoesThroughDoorman,
         Authorizable,

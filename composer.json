@@ -5,7 +5,11 @@
     "license": "mit",
     "authors": [
         {
-            "name": "mmltonge",
+            "name": "param",
+            "email": "param@redsnapper.net"
+        },
+        {
+            "name": "mark",
             "email": "mark@redsnapper.net"
         }
     ],

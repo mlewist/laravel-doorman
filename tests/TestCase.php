@@ -51,6 +51,7 @@ class TestCase extends OrchestraTestCase
         ]);
         $app['config']->set('doorman.role_class', Role::class);
         $app['config']->set('doorman.permission_class', Permission::class);
+        $app['config']->set('doorman.user_class', User::class);
     }
 
     protected function signIn($user = null,$region =null): UserInterface
@@ -67,7 +68,6 @@ class TestCase extends OrchestraTestCase
 
     protected function withPermissions(...$permissions)
     {
-
         $role = $this->getAuthRole();
 
         foreach ($permissions as $permission) {
@@ -93,9 +93,12 @@ class TestCase extends OrchestraTestCase
         return $this->authRole;
     }
 
+    /**
+     * @param  Role|null  $role
+     * @return mixed|Role
+     */
     public function setAuthRole(Role $role = null)
     {
-
         if (is_null($role)) {
             $role = factory(Role::class)->create();
         }

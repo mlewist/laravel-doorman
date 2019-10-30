@@ -3,13 +3,20 @@
 namespace Redsnapper\LaravelDoorman\Models\Traits;
 
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExist;
 use Redsnapper\LaravelDoorman\Models\Interfaces\PermissionInterface;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 trait IsDoormanPermission
 {
     use HasRoles;
+
+    public function scopeActive(Builder $query)
+    {
+        $query->where('active', true);
+    }
 
     /**
      * @param  string  $name
@@ -21,7 +28,7 @@ trait IsDoormanPermission
         $permission = $this->getPermissions()->get($name);
 
         if (!$permission) {
-            throw new Exception("Permission {$name} does not exist");
+            throw PermissionDoesNotExist::create("Permission {$name} does not exist");
         }
 
         return $permission;

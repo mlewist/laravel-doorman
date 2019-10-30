@@ -4,7 +4,7 @@ namespace Redsnapper\LaravelDoorman\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Redsnapper\LaravelDoorman\Models\Interfaces\RoleInterface;
-use Redsnapper\LaravelDoorman\PermissionsRegistrar;
+use Redsnapper\LaravelDoorman\Models\Interfaces\UserInterface;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Permission;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Role;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\User;
@@ -14,7 +14,7 @@ class RoleTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function roles_can_have_many_permissions()
+    public function roles_can_have_permissions()
     {
         $permissionA = factory(Permission::class)->create(["name" => "can-see-the-ground"]);
         $permissionB = factory(Permission::class)->create(["name" => "can-see-the-sky"]);
@@ -31,12 +31,79 @@ class RoleTest extends TestCase
     }
 
     /** @test */
-    public function permission_which_is_inactive_should_not_grant_access()
+    public function roles_can_be_assigned_to_a_user()
     {
-        $permission = factory(Permission::class)->create(['active' => false, 'name' => 'can-see-the-ground']);
-        $role = factory(Role::class)->create();
+        /** @var RoleInterface $role */
+        $role = factory(Role::class)->create(['name' => 'My First Role']);
+
+        /** @var UserInterface $user */
+        $user = factory(User::class)->create(['username' => 'Looking for purpose']);
+
+        $this->assertFalse($user->hasRole($role));
+        $user->assignRole($role);
+        $user->refresh();
+        $this->assertTrue($user->hasRole($role));
+    }
+
+    /** @test */
+    public function a_role_can_have_multiple_users()
+    {
+        /** @var RoleInterface $role */
+        $role = factory(Role::class)->create(['name' => 'Dodgy Characters']);
+
+        /** @var UserInterface $user */
+        $user = factory(User::class)->create(['username' => 'Nigel_Farage']);
+        $user2 = factory(User::class)->create(['username' => 'Boris_Johnson']);
+
+        $this->assertTrue($role->users->isEmpty());
+
+        $role->users()->sync([$user->getKey(), $user2->getKey()]);
+
+        $role->refresh();
+
+        $this->assertTrue($role->users->isNotEmpty());
+        $this->assertEquals(2, $role->users()->count());
+    }
+
+    /** @test */
+    public function a_user_can_have_multiple_roles()
+    {
+        /** @var RoleInterface $role */
+        $role = factory(Role::class)->create(['name' => 'Good Actors']);
+        $role2 = factory(Role::class)->create(['name' => 'Handsome Actors']);
+
+        /** @var UserInterface $user */
+        $user = factory(User::class)->create(['username' => 'Leo_DiCaprio']);
+
+        $user->assignRole($role);
+        $user->assignRole($role2);
+
+        $this->assertTrue($user->hasRole($role));
+        $this->assertTrue($user->hasRole($role2));
+    }
+
+    /** @test */
+    public function permissions_on_multiple_roles_all_apply_to_user()
+    {
+        $permission = factory(Permission::class)->create(['name' => 'act-superbly']);
+        $permission2 = factory(Permission::class)->create(['name' => 'look-fantastic']);
+
+        /** @var RoleInterface $role */
+        $role = factory(Role::class)->create(['name' => 'Good Actors']);
+        $role2 = factory(Role::class)->create(['name' => 'Handsome Actors']);
+
         $role->givePermissionTo($permission);
-        $this->setAuthRole($role);
-        $this->assertFalse($this->authRole->hasPermission("can-see-the-ground"));
+        $role2->givePermissionTo($permission2);
+
+        /** @var UserInterface $user */
+        $user = factory(User::class)->create(['username' => 'Leo_DiCaprio']);
+
+        $user->assignRole($role);
+        $user->assignRole($role2);
+
+        $this->signIn($user);
+
+        $this->assertTrue($user->can('act-superbly'));
+        $this->assertTrue($user->can('look-fantastic'));
     }
 }

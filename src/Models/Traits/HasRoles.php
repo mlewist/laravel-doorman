@@ -11,6 +11,14 @@ use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 trait HasRoles
 {
     /**
+     * @return BelongsToMany
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(app(PermissionsRegistrar::class)->getRoleClass());
+    }
+
+    /**
      * @param  RoleInterface  $role
      * @return Model
      */
@@ -22,14 +30,6 @@ trait HasRoles
     }
 
     /**
-     * @return BelongsToMany
-     */
-    public function roles(): BelongsToMany
-    {
-        return $this->belongsToMany(app(PermissionsRegistrar::class)->getRoleClass());
-    }
-
-    /**
      *  Determine if the model has (one of) the given role(s).
      *
      * @param  Collection|RoleInterface  $roles
@@ -38,7 +38,7 @@ trait HasRoles
     public function hasRole($roles): bool
     {
         if ($roles instanceof RoleInterface) {
-            return $this->roles->contains(app(PermissionsRegistrar::class)->getRoleClass()->getKeyName(),
+            return $this->roles->contains($roles->getKeyName(),
               $roles->getKey());
         }
 
