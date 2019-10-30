@@ -28,7 +28,7 @@ trait IsDoormanPermission
         $permission = $this->getPermissions()->get($name);
 
         if (!$permission) {
-            throw PermissionDoesNotExist::create("Permission {$name} does not exist");
+            throw PermissionDoesNotExist::create($name);
         }
 
         return $permission;
