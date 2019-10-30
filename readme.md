@@ -14,12 +14,14 @@ Your User model, must use the trait GoesThroughDoorman and implement UserInterfa
 
 ## Migrations
 
-The other thing that will be published are the migration files. Dont forget to run migrate. This will create/update tables:
+The other thing that will be published are the migration files. Dont forget to run migrate. This will create tables:
 
 permission_role
 permissions
 roles
 role_user
+
+It's expected that you already have your user table.
 
 ## Checking permissions
 
