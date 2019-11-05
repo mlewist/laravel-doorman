@@ -14,15 +14,19 @@ use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\User;
 
 class TestCase extends OrchestraTestCase
 {
+    /** @var RoleInterface */
     protected $authRole;
+
+    /** @var UserInterface */
     protected $authUser;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->loadMigrationsFrom(realpath('../src/data/migrations'));
         $this->loadMigrationsFrom(realpath(__DIR__.'/Fixtures/database/migrations'));
+        //TODO: When putting all but the Users migration into src only and loading from there, it causes tests to fail when running full suite (but pass when running individual files
+        // $this->loadMigrationsFrom(realpath('../src/database/migrations'));
         $this->withFactories(realpath(__DIR__.'/Fixtures/database/factories'));
 
     }

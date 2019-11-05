@@ -1,6 +1,6 @@
 <?php
 
-namespace Redsnapper\LaravelDoorman\Tests\Fixtures\Models;
+namespace Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Grouped;
 
 use Illuminate\Database\Eloquent\Model;
 use Redsnapper\LaravelDoorman\Models\Interfaces\GroupInterface;

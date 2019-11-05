@@ -3,6 +3,7 @@
 namespace Redsnapper\LaravelDoorman\Models\Traits;
 
 use Exception;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Redsnapper\LaravelDoorman\Exceptions\CurrentGroupNotSetException;
 use Redsnapper\LaravelDoorman\Models\Interfaces\GroupedPermissionInterface;
 use Redsnapper\LaravelDoorman\Models\Interfaces\GroupInterface;
@@ -30,6 +31,21 @@ trait IsGroupedUser
     }
 
     /**
+     * @return BelongsToMany
+     */
+    public function groups()
+    {
+        return $this->belongsToMany(app(PermissionsRegistrar::class)->getGroupClass(),
+                'group_user',
+            'group_id',
+            'user_id'
+            )
+            ->withPivot(
+                ['is_current']
+            );
+    }
+
+    /**
      * @return GroupInterface|null
      */
     public function currentGroup()
@@ -47,13 +63,13 @@ trait IsGroupedUser
      * @param GroupInterface $group
      * @return $this
      */
-    public function setCurrentGroup(GroupInterface $group): self
+    public function setCurrentGroup(GroupInterface $group)
     {
-        if(!empty($this->currentGroup())) {
+        if(!empty($this->groups()->wherePivot('is_current', true)->first())) {
             $this->groups()->syncWithoutDetaching([$this->currentGroup()->getKey(), ['is_current' => false]]);
         }
 
-        $this->groups()->syncWithoutDetaching([$group->getKey(), ['is_current' => true]]);
+        $this->groups()->syncWithoutDetaching([$group->getKey() => ['is_current' => true]]);
 
         return $this;
     }

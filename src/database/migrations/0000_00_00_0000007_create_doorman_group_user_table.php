@@ -17,6 +17,7 @@ class CreateDoormanGroupUserTable extends Migration
             Schema::create('group_user', function (Blueprint $table) {
                 $table->unsignedInteger('group_id');
                 $table->unsignedInteger('user_id');
+                $table->boolean('is_current')->default(false);
                 $table->primary(['group_id', 'user_id']);
             });
         }

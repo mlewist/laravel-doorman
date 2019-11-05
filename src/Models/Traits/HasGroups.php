@@ -24,10 +24,7 @@ trait HasGroups
      */
     public function groups()
     {
-        return $this->belongsToMany(app(PermissionsRegistrar::class)->getGroupClass())
-            ->withPivot(
-                ['is_current']
-            );
+        return $this->belongsToMany(app(PermissionsRegistrar::class)->getGroupClass());
     }
 
     public function scopeForGroup(Builder $query, Collection $groups)

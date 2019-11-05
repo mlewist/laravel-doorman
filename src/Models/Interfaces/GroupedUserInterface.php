@@ -2,6 +2,9 @@
 
 namespace Redsnapper\LaravelDoorman\Models\Interfaces;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+
 interface GroupedUserInterface extends UserInterface
 {
     public function currentGroup();
@@ -10,9 +13,9 @@ interface GroupedUserInterface extends UserInterface
 
     public function groupKeyName(): string;
 
-    public function groupPivotName(): string;
+    public function groupPivotKeyName(): string;
 
-    public function groups(): bool;
+    public function groups();
 
-    public function scopeForGroup();
+    public function scopeForGroup(Builder $query, Collection $groups);
 }

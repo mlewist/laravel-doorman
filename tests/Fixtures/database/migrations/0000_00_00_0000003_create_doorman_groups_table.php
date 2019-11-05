@@ -13,12 +13,13 @@ class CreateDoormanGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('groups', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name')->unique();
-            $table->timestamps();
-        });
-
+        if(config('doorman.uses_groups')) {
+            Schema::create('groups', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('name')->unique();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

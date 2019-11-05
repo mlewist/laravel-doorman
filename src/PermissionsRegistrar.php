@@ -23,12 +23,15 @@ class PermissionsRegistrar
 
     protected $permissionClass;
 
+    protected $groupClass;
+
 
     public function __construct(Gate $gate)
     {
         $this->gate = $gate;
         $this->roleClass = config('doorman.role_class');
         $this->permissionClass = config('doorman.permission_class');
+        $this->groupClass = config('doorman.group_class');
     }
 
     /**
@@ -95,7 +98,7 @@ class PermissionsRegistrar
     public function getGroupClass(): ?GroupInterface
     {
         if(config('doorman.uses_groups')) {
-            return app($this->permissionClass);
+            return app($this->groupClass);
         }
 
         return null;
