@@ -35,10 +35,7 @@ trait IsGroupedUser
      */
     public function groups()
     {
-        return $this->belongsToMany(app(PermissionsRegistrar::class)->getGroupClass(),
-                'group_user',
-            'group_id',
-            'user_id'
+        return $this->belongsToMany(app(PermissionsRegistrar::class)->getGroupClass()
             )
             ->withPivot(
                 ['is_current']
