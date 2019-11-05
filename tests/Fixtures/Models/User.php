@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Redsnapper\LaravelDoorman\Models\Interfaces\UserInterface;
-use Redsnapper\LaravelDoorman\Models\Traits\GoesThroughDoorman;
+use Redsnapper\LaravelDoorman\Models\Traits\IsUser;
 
 class User extends \Illuminate\Foundation\Auth\User implements UserInterface
 {
-    use GoesThroughDoorman,
+    use IsUser,
         Authorizable,
         \Illuminate\Auth\Authenticatable;
 }

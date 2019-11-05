@@ -5,7 +5,7 @@ namespace Redsnapper\LaravelDoorman\Tests\Fixtures\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Redsnapper\LaravelDoorman\Models\Interfaces\PermissionInterface;
-use Redsnapper\LaravelDoorman\Models\Traits\IsDoormanPermission;
+use Redsnapper\LaravelDoorman\Models\Traits\IsPermission;
 
 /**
  * App\Models\Permission
@@ -17,7 +17,7 @@ use Redsnapper\LaravelDoorman\Models\Traits\IsDoormanPermission;
  */
 class Permission extends Model implements PermissionInterface
 {
-    use IsDoormanPermission;
+    use IsPermission;
 
     protected $casts = ['active' => 'boolean'];
 

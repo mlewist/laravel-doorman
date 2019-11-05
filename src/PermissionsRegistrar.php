@@ -5,6 +5,7 @@ namespace Redsnapper\LaravelDoorman;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Support\Collection;
+use Redsnapper\LaravelDoorman\Models\Interfaces\GroupInterface;
 use Redsnapper\LaravelDoorman\Models\Interfaces\PermissionInterface;
 use Redsnapper\LaravelDoorman\Models\Interfaces\RoleInterface;
 
@@ -86,6 +87,18 @@ class PermissionsRegistrar
     public function getRoleClass(): RoleInterface
     {
         return app($this->roleClass);
+    }
+
+    /**
+     * @return GroupInterface|null
+     */
+    public function getGroupClass(): ?GroupInterface
+    {
+        if(config('doorman.uses_groups')) {
+            return app($this->permissionClass);
+        }
+
+        return null;
     }
 
     /**

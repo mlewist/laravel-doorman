@@ -3,10 +3,11 @@
 namespace Redsnapper\LaravelDoorman\Models\Traits;
 
 use Exception;
+use Redsnapper\LaravelDoorman\Models\Interfaces\GroupInterface;
 use Redsnapper\LaravelDoorman\Models\Interfaces\PermissionInterface;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
-trait GoesThroughDoorman
+trait IsUser
 {
     use HasRoles;
 

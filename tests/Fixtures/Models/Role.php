@@ -4,7 +4,7 @@ namespace Redsnapper\LaravelDoorman\Tests\Fixtures\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Redsnapper\LaravelDoorman\Models\Interfaces\RoleInterface;
-use Redsnapper\LaravelDoorman\Models\Traits\IsDoormanRole;
+use Redsnapper\LaravelDoorman\Models\Traits\IsRole;
 
 /**
  * App\Models\Role
@@ -16,5 +16,5 @@ use Redsnapper\LaravelDoorman\Models\Traits\IsDoormanRole;
  */
 class Role extends Model implements RoleInterface
 {
-    use IsDoormanRole;
+    use IsRole;
 }

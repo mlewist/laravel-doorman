@@ -6,7 +6,7 @@ use Exception;
 use Redsnapper\LaravelDoorman\Models\Interfaces\PermissionInterface;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
-trait IsDoormanRole
+trait IsRole
 {
     use HasPermissions, HasUsers;
 

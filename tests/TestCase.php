@@ -21,6 +21,7 @@ class TestCase extends OrchestraTestCase
     {
         parent::setUp();
 
+        $this->loadMigrationsFrom(realpath('../src/data/migrations'));
         $this->loadMigrationsFrom(realpath(__DIR__.'/Fixtures/database/migrations'));
         $this->withFactories(realpath(__DIR__.'/Fixtures/database/factories'));
 
