@@ -123,8 +123,8 @@ class GroupTest extends TestCase
         $manUtd = factory(Group::class)->create(["name" => "Man Utd"]);
 
         $manager = factory(Role::class)->create(["name" => "Football manager"]);
-        $wenger = factory(User::class)->create(["username" => "Wenger"]);
-        $mourinho = factory(User::class)->create(["username" => "Mourinho"]);
+        $wenger = factory(User::class)->create(["name" => "Wenger"]);
+        $mourinho = factory(User::class)->create(["name" => "Mourinho"]);
 
         $wenger->assignRole($manager);
         $wenger->groups()->syncWithoutDetaching($arsenal->getKey());

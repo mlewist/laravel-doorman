@@ -5,7 +5,7 @@ use Faker\Generator as Faker;
 if(config('doorman.uses_groups')) {
     $factory->define(Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Grouped\User::class, function (Faker $faker) {
         return [
-            'username'    => $this->faker->unique()->name,
+            'name'    => $this->faker->unique()->name,
             'email'    => $this->faker->unique()->safeEmail,
             'password' => 'secret'
         ];
@@ -13,7 +13,7 @@ if(config('doorman.uses_groups')) {
 } else {
     $factory->define(\Redsnapper\LaravelDoorman\Tests\Fixtures\Models\User::class, function (Faker $faker) {
         return [
-            'username'    => $this->faker->unique()->name,
+            'name'    => $this->faker->unique()->name,
             'email'    => $this->faker->unique()->safeEmail,
             'password' => 'secret'
         ];

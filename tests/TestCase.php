@@ -24,9 +24,7 @@ class TestCase extends OrchestraTestCase
     {
         parent::setUp();
 
-        $this->loadMigrationsFrom(realpath(__DIR__.'/Fixtures/database/migrations'));
-        //TODO: When putting all but the Users migration into src only and loading from there, it causes tests to fail when running full suite (but pass when running individual files
-        // $this->loadMigrationsFrom(realpath('../src/database/migrations'));
+        $this->loadLaravelMigrations();
         $this->withFactories(realpath(__DIR__.'/Fixtures/database/factories'));
 
     }

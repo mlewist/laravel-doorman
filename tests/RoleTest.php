@@ -37,7 +37,7 @@ class RoleTest extends TestCase
         $role = factory(Role::class)->create(['name' => 'My First Role']);
 
         /** @var UserInterface $user */
-        $user = factory(User::class)->create(['username' => 'Looking for purpose']);
+        $user = factory(User::class)->create(['name' => 'Looking for purpose']);
 
         $this->assertFalse($user->hasRole($role));
         $user->assignRole($role);
@@ -52,8 +52,8 @@ class RoleTest extends TestCase
         $role = factory(Role::class)->create(['name' => 'Dodgy Characters']);
 
         /** @var UserInterface $user */
-        $user = factory(User::class)->create(['username' => 'Nigel_Farage']);
-        $user2 = factory(User::class)->create(['username' => 'Boris_Johnson']);
+        $user = factory(User::class)->create(['name' => 'Nigel_Farage']);
+        $user2 = factory(User::class)->create(['name' => 'Boris_Johnson']);
 
         $this->assertTrue($role->users->isEmpty());
 
@@ -73,7 +73,7 @@ class RoleTest extends TestCase
         $role2 = factory(Role::class)->create(['name' => 'Handsome Actors']);
 
         /** @var UserInterface $user */
-        $user = factory(User::class)->create(['username' => 'Leo_DiCaprio']);
+        $user = factory(User::class)->create(['name' => 'Leo_DiCaprio']);
 
         $user->assignRole($role);
         $user->assignRole($role2);
@@ -96,7 +96,7 @@ class RoleTest extends TestCase
         $role2->givePermissionTo($permission2);
 
         /** @var UserInterface $user */
-        $user = factory(User::class)->create(['username' => 'Leo_DiCaprio']);
+        $user = factory(User::class)->create(['name' => 'Leo_DiCaprio']);
 
         $user->assignRole($role);
         $user->assignRole($role2);

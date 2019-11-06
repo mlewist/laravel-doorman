@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDoormanGroupsTable extends Migration
+class CreatePermissionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateDoormanGroupsTable extends Migration
      */
     public function up()
     {
-        if(config('doorman.uses_groups')) {
-            Schema::create('groups', function (Blueprint $table) {
-                $table->increments('id');
-                $table->string('name')->unique();
-                $table->timestamps();
-            });
-        }
+        Schema::create('permissions', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name')->unique();
+            $table->boolean('active')->default(true);
+            $table->timestamps();
+        });
     }
 
     /**
@@ -29,6 +28,6 @@ class CreateDoormanGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('groups');
+        Schema::dropIfExists('permissions');
     }
 }
