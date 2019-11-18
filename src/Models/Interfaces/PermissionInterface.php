@@ -14,8 +14,6 @@ interface PermissionInterface
 
     public function getPermissions(): Collection;
 
-    public function isActive(): bool;
-
     public function getKey();
 
     public function getKeyName();

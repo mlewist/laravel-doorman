@@ -21,7 +21,7 @@ trait IsUser
         /** @var PermissionInterface $permission */
         $permission = app(PermissionsRegistrar::class)->getPermissionClass()->findByName($permission);
 
-        return ($permission->isActive() && $this->hasPermission($permission));
+        return ($this->hasPermission($permission));
     }
 
     public function hasPermission(PermissionInterface $permission): bool

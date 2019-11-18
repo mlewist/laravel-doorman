@@ -75,17 +75,4 @@ class PermissionsTest extends TestCase
 
         $this->authUser->hasPermissionTo('non-existent');
     }
-
-    /** @test */
-    public function it_throws_a_permission_does_not_exist_when_trying_to_verify_inactive_permissions()
-    {
-        $permission = factory(Permission::class)->create(['active' => false, 'name' => 'can-see-the-ground']);
-        $role = factory(Role::class)->create();
-        $role->givePermissionTo($permission);
-        $this->setAuthRole($role);
-
-        $this->expectException(PermissionDoesNotExistException::class);
-
-        $this->authRole->hasPermission("can-see-the-ground");
-    }
 }

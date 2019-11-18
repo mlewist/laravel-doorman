@@ -67,7 +67,6 @@ class PermissionsRegistrar
             // We key by name so that when looking up activities we can find them
             // quicker
             $this->permissions = $this->getPermissionClass()
-                ->active()
                 ->with(['roles'])
                 ->get()
                 ->keyBy('name');

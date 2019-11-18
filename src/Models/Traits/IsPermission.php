@@ -13,11 +13,6 @@ trait IsPermission
 {
     use HasRoles;
 
-    public function scopeActive(Builder $query)
-    {
-        $query->where('active', true);
-    }
-
     /**
      * @param  string  $name
      * @return PermissionInterface|null

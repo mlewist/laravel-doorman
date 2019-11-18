@@ -24,9 +24,8 @@ trait IsGroupedUser
         $permission = app(PermissionsRegistrar::class)->getPermissionClass()->findByName($permission);
 
         return (
-            $permission->isActive() &&
-            $this->hasPermission($permission)  &&
-            $permission->allowsGroup($this->currentGroup())
+          $this->hasPermission($permission) &&
+          $permission->allowsGroup($this->currentGroup())
         );
     }
 
@@ -36,10 +35,10 @@ trait IsGroupedUser
     public function groups()
     {
         return $this->belongsToMany(app(PermissionsRegistrar::class)->getGroupClass()
-            )
-            ->withPivot(
-                ['is_current']
-            );
+        )
+          ->withPivot(
+            ['is_current']
+          );
     }
 
     /**
@@ -49,7 +48,7 @@ trait IsGroupedUser
     {
         $group = $this->groups()->wherePivot('is_current', true)->first();
 
-        if(empty($group)) {
+        if (empty($group)) {
             throw CurrentGroupNotSetException::create();
         }
 
@@ -57,12 +56,12 @@ trait IsGroupedUser
     }
 
     /**
-     * @param GroupInterface $group
+     * @param  GroupInterface  $group
      * @return $this
      */
     public function setCurrentGroup(GroupInterface $group)
     {
-        if(!empty($this->groups()->wherePivot('is_current', true)->first())) {
+        if (!empty($this->groups()->wherePivot('is_current', true)->first())) {
             $this->groups()->syncWithoutDetaching([$this->currentGroup()->getKey(), ['is_current' => false]]);
         }
 
