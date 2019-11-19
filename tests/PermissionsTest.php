@@ -7,7 +7,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExistException;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Permission;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Role;
-use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\User;
 
 class PermissionsTest extends TestCase
 {
@@ -18,8 +17,8 @@ class PermissionsTest extends TestCase
     {
         $user = $this->signIn();
 
-        $activityA = factory(Permission::class)->create(['name' =>'can-see-the-ground']);
-        $activityB = factory(Permission::class)->create(['name'=>'can-see-the-sky']);
+        $activityA = factory(Permission::class)->create(['name' => 'can-see-the-ground']);
+        $activityB = factory(Permission::class)->create(['name' => 'can-see-the-sky']);
 
         $role = factory(Role::class)->create(['name' => 'Person with bad neck']);
         $role->givePermissionTo($activityA);
@@ -34,7 +33,7 @@ class PermissionsTest extends TestCase
     {
         $user = $this->signIn();
 
-        $activityA = factory(Permission::class)->create(['name' =>'can-swim-fast']);
+        $activityA = factory(Permission::class)->create(['name' => 'can-swim-fast']);
         $role = factory(Role::class)->create(['name' => 'Person with big feet']);
         $role->givePermissionTo($activityA);
         $user->assignRole($role);

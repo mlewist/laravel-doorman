@@ -24,15 +24,11 @@ class GroupTest extends TestCase
      */
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('database.default', 'sqlite');
-        $app['config']->set('database.connections.sqlite', [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-            'prefix' => '',
-        ]);
+        parent::getEnvironmentSetUp($app);
+
         $app['config']->set('doorman.role_class', Role::class);
 
-        $app['config']->set('doorman.permission_class', Permission::class);
+        $app['config']->set('doorman.models.permission', Permission::class);
         $app['config']->set('doorman.user_class', User::class);
         $app['config']->set('doorman.uses_groups', true);
         $app['config']->set('doorman.group_name', 'Group');

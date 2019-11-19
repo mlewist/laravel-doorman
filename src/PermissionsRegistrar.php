@@ -30,7 +30,7 @@ class PermissionsRegistrar
     {
         $this->gate = $gate;
         $this->roleClass = config('doorman.role_class');
-        $this->permissionClass = config('doorman.permission_class');
+        $this->permissionClass = config('doorman.models.permission');
         $this->groupClass = config('doorman.group_class');
     }
 

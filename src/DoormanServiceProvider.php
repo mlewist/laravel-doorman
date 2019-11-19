@@ -18,6 +18,11 @@ class DoormanServiceProvider extends ServiceProvider
             return new PermissionsRegistrar($app->make(Gate::class));
         });
 
+        $this->mergeConfigFrom(
+          __DIR__.'/../config/doorman.php',
+          'doorman'
+        );
+
 
     }
 
@@ -25,7 +30,11 @@ class DoormanServiceProvider extends ServiceProvider
     {
         $this->registerMigrations();
 
-        $this->publishes([__DIR__.'/config' => config_path()], 'redsnapper-laravel-doorman');
+        $this->publishes([
+          __DIR__.'/../config/doorman.php' => config_path('doorman.php'),
+        ], 'config');
+
+
         $this->publishes([__DIR__.'/database' => database_path()], 'doorman-migrations');
     }
 

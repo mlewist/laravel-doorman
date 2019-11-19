@@ -53,7 +53,6 @@ class TestCase extends OrchestraTestCase
             'prefix'   => '',
         ]);
         $app['config']->set('doorman.role_class', Role::class);
-        $app['config']->set('doorman.permission_class', Permission::class);
         $app['config']->set('doorman.user_class', User::class);
     }
 
