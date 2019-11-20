@@ -5,9 +5,9 @@ namespace Redsnapper\LaravelDoorman;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Support\Collection;
-use Redsnapper\LaravelDoorman\Models\Interfaces\GroupInterface;
-use Redsnapper\LaravelDoorman\Models\Interfaces\PermissionInterface;
-use Redsnapper\LaravelDoorman\Models\Interfaces\RoleInterface;
+use Redsnapper\LaravelDoorman\Models\Contracts\GroupInterface;
+use Redsnapper\LaravelDoorman\Models\Contracts\PermissionContract;
+use Redsnapper\LaravelDoorman\Models\Contracts\RoleInterface;
 
 class PermissionsRegistrar
 {
@@ -76,9 +76,9 @@ class PermissionsRegistrar
     }
 
     /**
-     * @return PermissionInterface
+     * @return PermissionContract
      */
-    public function getPermissionClass(): PermissionInterface
+    public function getPermissionClass(): PermissionContract
     {
         return app($this->permissionClass);
     }

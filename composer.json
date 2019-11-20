@@ -37,8 +37,7 @@
     "extra": {
       "laravel": {
         "providers": [
-          "Redsnapper\\LaravelDoorman\\DoormanServiceProvider",
-          "Redsnapper\\LaravelDoorman\\DoormanAuthServiceProvider"
+          "Redsnapper\\LaravelDoorman\\DoormanServiceProvider"
         ]
       }
     }

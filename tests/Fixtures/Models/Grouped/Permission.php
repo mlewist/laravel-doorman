@@ -4,9 +4,8 @@ namespace Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Grouped;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Redsnapper\LaravelDoorman\Models\Interfaces\PermissionInterface;
+use Redsnapper\LaravelDoorman\Models\Contracts\PermissionContract;
 use Redsnapper\LaravelDoorman\Models\Traits\IsGroupedPermission;
-use Redsnapper\LaravelDoorman\Models\Traits\IsPermission;
 
 /**
  * App\Models\Permission
@@ -16,7 +15,7 @@ use Redsnapper\LaravelDoorman\Models\Traits\IsPermission;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-class Permission extends Model implements PermissionInterface
+class Permission extends Model implements PermissionContract
 {
     use IsGroupedPermission;
 

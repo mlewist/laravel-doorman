@@ -2,7 +2,7 @@
 
 namespace Redsnapper\LaravelDoorman\Models\Traits;
 
-use Redsnapper\LaravelDoorman\Models\Interfaces\GroupInterface;
+use Redsnapper\LaravelDoorman\Models\Contracts\GroupInterface;
 
 trait IsGroupedPermission
 {

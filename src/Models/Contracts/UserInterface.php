@@ -1,12 +1,12 @@
 <?php
 
-namespace Redsnapper\LaravelDoorman\Models\Interfaces;
+namespace Redsnapper\LaravelDoorman\Models\Contracts;
 
 interface UserInterface
 {
     public function hasPermissionTo(string $permission);
 
-    public function hasPermission(PermissionInterface $permission);
+    public function hasPermission(PermissionContract $permission);
 
     public function assignRole(RoleInterface $role);
 

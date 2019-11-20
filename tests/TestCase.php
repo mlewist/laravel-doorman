@@ -4,11 +4,9 @@ namespace Redsnapper\LaravelDoorman\Tests;
 
 use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use Redsnapper\LaravelDoorman\Models\Interfaces\RoleInterface;
-use Redsnapper\LaravelDoorman\Models\Interfaces\UserInterface;
-use Redsnapper\LaravelDoorman\DoormanAuthServiceProvider;
+use Redsnapper\LaravelDoorman\Models\Contracts\RoleInterface;
+use Redsnapper\LaravelDoorman\Models\Contracts\UserInterface;
 use Redsnapper\LaravelDoorman\DoormanServiceProvider;
-use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Permission;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Role;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\User;
 
@@ -36,7 +34,7 @@ class TestCase extends OrchestraTestCase
      */
     protected function getPackageProviders($app)
     {
-        return [DoormanServiceProvider::class, DoormanAuthServiceProvider::class];
+        return [DoormanServiceProvider::class];
     }
 
     /**

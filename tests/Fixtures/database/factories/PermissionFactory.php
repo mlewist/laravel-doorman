@@ -1,7 +1,7 @@
 <?php
 
 use Faker\Generator as Faker;
-use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Permission;
+use Redsnapper\LaravelDoorman\Models\Permission;
 
 if(config('doorman.uses_groups')) {
     $factory->define(Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Grouped\Permission::class, function (Faker $faker) {

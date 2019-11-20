@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Redsnapper\LaravelDoorman\Models\Interfaces;
+namespace Redsnapper\LaravelDoorman\Models\Contracts;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 
-interface PermissionInterface
+interface PermissionContract
 {
     public function findByName(string $name);
 

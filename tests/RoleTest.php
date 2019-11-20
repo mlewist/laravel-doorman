@@ -3,9 +3,9 @@
 namespace Redsnapper\LaravelDoorman\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Redsnapper\LaravelDoorman\Models\Interfaces\RoleInterface;
-use Redsnapper\LaravelDoorman\Models\Interfaces\UserInterface;
-use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Permission;
+use Redsnapper\LaravelDoorman\Models\Contracts\RoleInterface;
+use Redsnapper\LaravelDoorman\Models\Contracts\UserInterface;
+use Redsnapper\LaravelDoorman\Models\Permission;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Role;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\User;
 

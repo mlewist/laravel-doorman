@@ -1,6 +1,6 @@
 <?php
 
-namespace Redsnapper\LaravelDoorman\Models\Interfaces;
+namespace Redsnapper\LaravelDoorman\Models\Contracts;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
