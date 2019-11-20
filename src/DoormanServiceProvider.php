@@ -4,7 +4,7 @@ namespace Redsnapper\LaravelDoorman;
 
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Support\ServiceProvider;
-use Redsnapper\LaravelDoorman\Models\Contracts\PermissionContract;
+use Redsnapper\LaravelDoorman\Models\Contracts\Permission;
 
 class DoormanServiceProvider extends ServiceProvider
 {
@@ -53,7 +53,7 @@ class DoormanServiceProvider extends ServiceProvider
     protected function registerModelBindings()
     {
         $config = $this->app->config['doorman.models'];
-        $this->app->bind(PermissionContract::class, $config['permission']);
+        $this->app->bind(Permission::class, $config['permission']);
     }
 
 }

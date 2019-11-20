@@ -3,7 +3,7 @@
 namespace Redsnapper\LaravelDoorman\Models\Traits;
 
 use Exception;
-use Redsnapper\LaravelDoorman\Models\Contracts\PermissionContract;
+use Redsnapper\LaravelDoorman\Models\Contracts\Permission;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 trait IsRole
@@ -11,7 +11,7 @@ trait IsRole
     use HasPermissions, HasUsers;
 
     /**
-     * @param  PermissionContract|string  $permission
+     * @param  Permission|string  $permission
      * @throws Exception
      */
     public function givePermissionTo($permission)
@@ -24,7 +24,7 @@ trait IsRole
     }
 
     /**
-     * @param  PermissionContract|string  $permission
+     * @param  Permission|string  $permission
      * @return string
      * @throws Exception
      */
@@ -35,7 +35,7 @@ trait IsRole
               ->findByName($permission)->getKey();
         }
 
-        if ($permission instanceof PermissionContract) {
+        if ($permission instanceof Permission) {
             $permission = $permission->getKey();
         }
 
@@ -67,7 +67,7 @@ trait IsRole
     /**
      * Does this role have this permission
      *
-     * @param  PermissionContract|string  $permission
+     * @param  Permission|string  $permission
      * @return bool
      * @throws Exception
      */

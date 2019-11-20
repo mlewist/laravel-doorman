@@ -46,7 +46,7 @@ return [
     |
     */
   'migrations' => true,
-  
+
   'uses_groups' => false,
   'group_name'  => 'Group',
   'group_class' => '',

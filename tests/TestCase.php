@@ -4,10 +4,9 @@ namespace Redsnapper\LaravelDoorman\Tests;
 
 use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use Redsnapper\LaravelDoorman\Models\Contracts\RoleContract;
+use Redsnapper\LaravelDoorman\Models\Contracts\Role as RoleContract;
 use Redsnapper\LaravelDoorman\Models\Contracts\UserInterface;
 use Redsnapper\LaravelDoorman\DoormanServiceProvider;
-use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Role;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\User;
 
 class TestCase extends OrchestraTestCase
@@ -74,7 +73,7 @@ class TestCase extends OrchestraTestCase
     /**
      * Get role for this user
      *
-     * @return RoleContract
+     * @return Role
      */
     private function getAuthRole(): RoleContract
     {

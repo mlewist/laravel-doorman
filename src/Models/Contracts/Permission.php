@@ -4,15 +4,17 @@
 namespace Redsnapper\LaravelDoorman\Models\Contracts;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Collection;
 
-interface PermissionContract
+interface Permission
 {
-    public function findByName(string $name);
-
+    /**
+     * The roles which this permission belongs to
+     *
+     * @return BelongsToMany
+     */
     public function roles(): BelongsToMany;
 
-    public function getPermissions(): Collection;
+    public function findByName(string $name);
 
     public function getKey();
 

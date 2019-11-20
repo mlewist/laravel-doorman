@@ -2,7 +2,7 @@
 
 namespace Redsnapper\LaravelDoorman\Models\Contracts;
 
-interface RoleContract
+interface Role
 {
     public function permissions();
 
@@ -17,4 +17,12 @@ interface RoleContract
     public function getKey();
 
     public function getKeyName();
+
+    /**
+     * Find a role by its name.
+     *
+     * @param  string  $name
+     * @return Role
+     */
+    public static function findByName(string $name): self;
 }

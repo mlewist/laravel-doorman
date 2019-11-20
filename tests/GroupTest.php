@@ -5,8 +5,7 @@ namespace Redsnapper\LaravelDoorman\Tests;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Redsnapper\LaravelDoorman\Exceptions\CurrentGroupNotSetException;
-use Redsnapper\LaravelDoorman\Models\Contracts\GroupedPermissionContract;
-use Redsnapper\LaravelDoorman\Models\Contracts\RoleContract;
+use Redsnapper\LaravelDoorman\Models\Contracts\GroupedPermission;
 use Redsnapper\LaravelDoorman\Models\Contracts\UserInterface;
 use Redsnapper\LaravelDoorman\Models\Role;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Grouped\Group;
@@ -69,7 +68,7 @@ class GroupTest extends TestCase
         $group = factory(Group::class)->create(["name" => "Arsenal"]);
         $activityA = factory(Permission::class)->create(["name" => "Play out from the back"]);
 
-        /** @var RoleContract $role */
+        /** @var Role $role */
         $role = factory(Role::class)->create(["name" => "Centre back"]);
         $role->givePermissionTo($activityA);
         $this->signIn($user);
@@ -88,7 +87,7 @@ class GroupTest extends TestCase
     {
         $arsenal = factory(Group::class)->create(["name" => "Arsenal"]);
         $liverpool = factory(Group::class)->create(["name" => "Liverpool"]);
-        /** @var GroupedPermissionContract $permission */
+        /** @var GroupedPermission $permission */
         $permission = factory(Permission::class)->create(["name" => "Play negative football"]);
 
         $permission->groups()->attach($arsenal);
@@ -103,7 +102,7 @@ class GroupTest extends TestCase
     {
         $arsenal = factory(Group::class)->create(["name" => "Arsenal"]);
         $liverpool = factory(Group::class)->create(["name" => "Liverpool"]);
-        /** @var GroupedPermissionContract $permission */
+        /** @var GroupedPermission $permission */
         $permission = factory(Permission::class)->create(["name" => "Play football"]);
 
         $this->assertTrue($permission->allowsGroup($arsenal));

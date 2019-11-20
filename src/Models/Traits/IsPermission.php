@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExistException;
-use Redsnapper\LaravelDoorman\Models\Contracts\PermissionContract;
+use Redsnapper\LaravelDoorman\Models\Contracts\Permission;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 trait IsPermission
@@ -15,7 +15,7 @@ trait IsPermission
 
     /**
      * @param  string  $name
-     * @return PermissionContract|null
+     * @return Permission|null
      * @throws Exception
      */
     public function findByName(string $name)

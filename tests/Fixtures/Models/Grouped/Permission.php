@@ -4,7 +4,7 @@ namespace Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Grouped;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Redsnapper\LaravelDoorman\Models\Contracts\PermissionContract;
+use Redsnapper\LaravelDoorman\Models\Contracts\Permission as PermissionContract;
 use Redsnapper\LaravelDoorman\Models\Traits\IsGroupedPermission;
 
 /**

@@ -3,8 +3,8 @@
 namespace Redsnapper\LaravelDoorman\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Redsnapper\LaravelDoorman\Models\Contracts\PermissionContract;
-use Redsnapper\LaravelDoorman\Models\Contracts\RoleContract;
+use Redsnapper\LaravelDoorman\Models\Contracts\Permission;
+use Redsnapper\LaravelDoorman\Models\Contracts\Role as RoleContract;
 use Redsnapper\LaravelDoorman\Models\Traits\HasPermissions;
 use Redsnapper\LaravelDoorman\Models\Traits\HasUsers;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
@@ -14,7 +14,7 @@ class Role extends Model implements RoleContract
     use HasPermissions, HasUsers;
 
     /**
-     * @param  PermissionContract|string  $permission
+     * @param  Permission|string  $permission
      * @throws Exception
      */
     public function givePermissionTo($permission)
@@ -27,7 +27,7 @@ class Role extends Model implements RoleContract
     }
 
     /**
-     * @param  PermissionContract|string  $permission
+     * @param  Permission|string  $permission
      * @return string
      * @throws Exception
      */
@@ -38,7 +38,7 @@ class Role extends Model implements RoleContract
               ->findByName($permission)->getKey();
         }
 
-        if ($permission instanceof PermissionContract) {
+        if ($permission instanceof Permission) {
             $permission = $permission->getKey();
         }
 
@@ -69,7 +69,7 @@ class Role extends Model implements RoleContract
     /**
      * Does this role have this permission
      *
-     * @param  PermissionContract|string  $permission
+     * @param  Permission|string  $permission
      * @return bool
      * @throws Exception
      */
@@ -77,6 +77,19 @@ class Role extends Model implements RoleContract
     {
         return $this->permissions->contains(app(PermissionsRegistrar::class)->getPermissionClass()->getKeyName(),
           $this->getPermissionId($permission));
+    }
+
+    /**
+     * Find a role by its name.
+     *
+     * @param  string  $name
+     * @return RoleContract
+     */
+    public static function findByName(string $name): RoleContract
+    {
+        $role = static::where('name', $name)->first();
+
+        return $role;
     }
 
 }

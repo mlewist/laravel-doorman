@@ -5,7 +5,7 @@ namespace Redsnapper\LaravelDoorman\Models\Traits;
 use Exception;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Redsnapper\LaravelDoorman\Exceptions\CurrentGroupNotSetException;
-use Redsnapper\LaravelDoorman\Models\Contracts\GroupedPermissionContract;
+use Redsnapper\LaravelDoorman\Models\Contracts\GroupedPermission;
 use Redsnapper\LaravelDoorman\Models\Contracts\GroupInterface;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
@@ -20,7 +20,7 @@ trait IsGroupedUser
      */
     public function hasPermissionTo(string $permission): bool
     {
-        /** @var GroupedPermissionContract $permission */
+        /** @var GroupedPermission $permission */
         $permission = app(PermissionsRegistrar::class)->getPermissionClass()->findByName($permission);
 
         return (

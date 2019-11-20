@@ -3,7 +3,6 @@
 namespace Redsnapper\LaravelDoorman\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Redsnapper\LaravelDoorman\Models\Contracts\RoleContract;
 use Redsnapper\LaravelDoorman\Models\Contracts\UserInterface;
 use Redsnapper\LaravelDoorman\Models\Permission;
 use Redsnapper\LaravelDoorman\Models\Role;
@@ -13,12 +12,30 @@ class RoleTest extends TestCase
 {
     use RefreshDatabase;
 
+    /**
+     * @var User
+     */
+    protected $testUser;
+
+    /**
+     * @var Role
+     */
+    protected $testRole;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->testUser = factory(User::class)->create();
+        $this->testRole = factory(Role::class)->create(['name'=>'Test']);
+    }
+
     /** @test */
     public function roles_can_have_permissions()
     {
         $permissionA = factory(Permission::class)->create(["name" => "can-see-the-ground"]);
         $permissionB = factory(Permission::class)->create(["name" => "can-see-the-sky"]);
-        /** @var RoleContract $role */
+        /** @var Role $role */
         $role = factory(Role::class)->create();
         $role->givePermissionTo($permissionA);
 
@@ -31,24 +48,9 @@ class RoleTest extends TestCase
     }
 
     /** @test */
-    public function roles_can_be_assigned_to_a_user()
-    {
-        /** @var RoleContract $role */
-        $role = factory(Role::class)->create(['name' => 'My First Role']);
-
-        /** @var UserInterface $user */
-        $user = factory(User::class)->create(['name' => 'Looking for purpose']);
-
-        $this->assertFalse($user->hasRole($role));
-        $user->assignRole($role);
-        $user->refresh();
-        $this->assertTrue($user->hasRole($role));
-    }
-
-    /** @test */
     public function a_role_can_have_multiple_users()
     {
-        /** @var RoleContract $role */
+        /** @var Role $role */
         $role = factory(Role::class)->create(['name' => 'Dodgy Characters']);
 
         /** @var UserInterface $user */
@@ -65,22 +67,6 @@ class RoleTest extends TestCase
         $this->assertEquals(2, $role->users()->count());
     }
 
-    /** @test */
-    public function a_user_can_have_multiple_roles()
-    {
-        /** @var RoleContract $role */
-        $role = factory(Role::class)->create(['name' => 'Good Actors']);
-        $role2 = factory(Role::class)->create(['name' => 'Handsome Actors']);
-
-        /** @var UserInterface $user */
-        $user = factory(User::class)->create(['name' => 'Leo_DiCaprio']);
-
-        $user->assignRole($role);
-        $user->assignRole($role2);
-
-        $this->assertTrue($user->hasRole($role));
-        $this->assertTrue($user->hasRole($role2));
-    }
 
     /** @test */
     public function permissions_on_multiple_roles_all_apply_to_user()
@@ -88,7 +74,7 @@ class RoleTest extends TestCase
         $permission = factory(Permission::class)->create(['name' => 'act-superbly']);
         $permission2 = factory(Permission::class)->create(['name' => 'look-fantastic']);
 
-        /** @var RoleContract $role */
+        /** @var Role $role */
         $role = factory(Role::class)->create(['name' => 'Good Actors']);
         $role2 = factory(Role::class)->create(['name' => 'Handsome Actors']);
 

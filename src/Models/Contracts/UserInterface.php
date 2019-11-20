@@ -6,9 +6,7 @@ interface UserInterface
 {
     public function hasPermissionTo(string $permission);
 
-    public function hasPermission(PermissionContract $permission);
-
-    public function assignRole(RoleContract $role);
+    public function hasPermission(Permission $permission);
 
     public function hasRole($roles): bool;
 }
