@@ -37,6 +37,33 @@ class HasRolesTest extends TestCase
     }
 
     /** @test */
+    public function can_check_if_user_has_a_role()
+    {
+        $this->assertFalse($this->testUser->hasRole($this->testRole));
+        $role = factory(Role::class)->create();
+        $this->assertFalse($this->testUser->hasRole($role));
+        $this->testUser->assignRole($role);
+
+        $this->assertTrue($this->testUser->hasRole($role));
+        $this->assertTrue($this->testUser->hasRole($role->name));
+        $this->assertTrue($this->testUser->hasRole([$role->name, 'fakeRole']));
+        $this->assertTrue($this->testUser->hasRole($role->id));
+        $this->assertTrue($this->testUser->hasRole([$role->id, 'fakeRole']));
+
+    }
+
+    /** @test */
+    public function can_remove_a_role()
+    {
+        $this->testUser->assignRole($this->testRole,$this->testRole2);
+        $this->testUser->removeRole($this->testRole2);
+
+        $this->assertTrue($this->testUser->hasRole($this->testRole));
+        $this->assertFalse($this->testUser->hasRole($this->testRole2));
+
+    }
+
+    /** @test */
     public function it_can_assign_a_role_using_a_model()
     {
         $this->testUser->hasRole($this->testRole);
@@ -61,11 +88,9 @@ class HasRolesTest extends TestCase
     /** @test */
     public function can_assign_multiple_roles()
     {
-        $role2  =factory(Role::class)->create(['name'=>'Test 2']);
-
         $this->testUser->assignRole($this->testRole->id, 'Test 2');
         $this->assertTrue($this->testUser->hasRole($this->testRole));
-        $this->assertTrue($this->testUser->hasRole($role2));
+        $this->assertTrue($this->testUser->hasRole($this->testRole2));
     }
 
     /** @test */

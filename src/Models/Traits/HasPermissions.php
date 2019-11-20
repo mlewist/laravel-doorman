@@ -14,4 +14,12 @@ trait HasPermissions
     {
         return $this->belongsToMany(app(PermissionsRegistrar::class)->getPermissionClass());
     }
+
+    /**
+     * Forget the cached permissions.
+     */
+    private function forgetCachedPermissions()
+    {
+        app(PermissionsRegistrar::class)->forgetCachedPermissions();
+    }
 }

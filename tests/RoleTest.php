@@ -12,23 +12,7 @@ class RoleTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @var User
-     */
-    protected $testUser;
 
-    /**
-     * @var Role
-     */
-    protected $testRole;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->testUser = factory(User::class)->create();
-        $this->testRole = factory(Role::class)->create(['name'=>'Test']);
-    }
 
     /** @test */
     public function roles_can_have_permissions()

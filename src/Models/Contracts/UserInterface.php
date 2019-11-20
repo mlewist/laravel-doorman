@@ -8,5 +8,4 @@ interface UserInterface
 
     public function hasPermission(Permission $permission);
 
-    public function hasRole($roles): bool;
 }
