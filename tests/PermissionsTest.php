@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExistException;
 use Redsnapper\LaravelDoorman\Models\Permission;
-use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Role;
+use Redsnapper\LaravelDoorman\Models\Role;
 
 class PermissionsTest extends TestCase
 {

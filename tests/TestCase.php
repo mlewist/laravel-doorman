@@ -4,7 +4,7 @@ namespace Redsnapper\LaravelDoorman\Tests;
 
 use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use Redsnapper\LaravelDoorman\Models\Contracts\RoleInterface;
+use Redsnapper\LaravelDoorman\Models\Contracts\RoleContract;
 use Redsnapper\LaravelDoorman\Models\Contracts\UserInterface;
 use Redsnapper\LaravelDoorman\DoormanServiceProvider;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Role;
@@ -12,7 +12,7 @@ use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\User;
 
 class TestCase extends OrchestraTestCase
 {
-    /** @var RoleInterface */
+    /** @var RoleContract */
     protected $authRole;
 
     /** @var UserInterface */
@@ -44,14 +44,8 @@ class TestCase extends OrchestraTestCase
      */
     protected function getEnvironmentSetUp($app)
     {
-        $app['config']->set('database.default', 'sqlite');
-        $app['config']->set('database.connections.sqlite', [
-            'driver'   => 'sqlite',
-            'database' => ':memory:',
-            'prefix'   => '',
-        ]);
-        $app['config']->set('doorman.role_class', Role::class);
-        $app['config']->set('doorman.user_class', User::class);
+        $app['config']->set('database.default', 'testing');
+        $app['config']->set('auth.providers.users.model', User::class);
     }
 
     protected function signIn($user = null,$region =null): UserInterface
@@ -80,9 +74,9 @@ class TestCase extends OrchestraTestCase
     /**
      * Get role for this user
      *
-     * @return RoleInterface
+     * @return RoleContract
      */
-    private function getAuthRole(): RoleInterface
+    private function getAuthRole(): RoleContract
     {
         if ($this->authRole) {
             return $this->authRole;
@@ -94,10 +88,10 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
-     * @param  Role|null  $role
-     * @return mixed|Role
+     * @param  RoleContract|null  $role
+     * @return mixed|RoleContract
      */
-    public function setAuthRole(Role $role = null)
+    public function setAuthRole(RoleContract $role = null)
     {
         if (is_null($role)) {
             $role = factory(Role::class)->create();

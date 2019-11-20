@@ -6,12 +6,12 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Redsnapper\LaravelDoorman\Exceptions\CurrentGroupNotSetException;
 use Redsnapper\LaravelDoorman\Models\Contracts\GroupedPermissionContract;
-use Redsnapper\LaravelDoorman\Models\Contracts\RoleInterface;
+use Redsnapper\LaravelDoorman\Models\Contracts\RoleContract;
 use Redsnapper\LaravelDoorman\Models\Contracts\UserInterface;
+use Redsnapper\LaravelDoorman\Models\Role;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Grouped\Group;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Grouped\User;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Grouped\Permission;
-use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Role;
 
 class GroupTest extends TestCase
 {
@@ -25,8 +25,6 @@ class GroupTest extends TestCase
     protected function getEnvironmentSetUp($app)
     {
         parent::getEnvironmentSetUp($app);
-
-        $app['config']->set('doorman.role_class', Role::class);
 
         $app['config']->set('doorman.models.permission', Permission::class);
         $app['config']->set('doorman.user_class', User::class);
@@ -71,7 +69,7 @@ class GroupTest extends TestCase
         $group = factory(Group::class)->create(["name" => "Arsenal"]);
         $activityA = factory(Permission::class)->create(["name" => "Play out from the back"]);
 
-        /** @var RoleInterface $role */
+        /** @var RoleContract $role */
         $role = factory(Role::class)->create(["name" => "Centre back"]);
         $role->givePermissionTo($activityA);
         $this->signIn($user);

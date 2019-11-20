@@ -5,7 +5,7 @@ namespace Redsnapper\LaravelDoorman\Models\Traits;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Redsnapper\LaravelDoorman\Models\Contracts\RoleInterface;
+use Redsnapper\LaravelDoorman\Models\Contracts\RoleContract;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 trait HasRoles
@@ -19,10 +19,10 @@ trait HasRoles
     }
 
     /**
-     * @param  RoleInterface  $role
+     * @param  RoleContract  $role
      * @return Model
      */
-    public function assignRole(RoleInterface $role): self
+    public function assignRole(RoleContract $role): self
     {
         $this->roles()->syncWithoutDetaching($role->getKey());
 
@@ -32,12 +32,12 @@ trait HasRoles
     /**
      *  Determine if the model has (one of) the given role(s).
      *
-     * @param  Collection|RoleInterface  $roles
+     * @param  Collection|RoleContract  $roles
      * @return bool
      */
     public function hasRole($roles): bool
     {
-        if ($roles instanceof RoleInterface) {
+        if ($roles instanceof RoleContract) {
             return $this->roles->contains($roles->getKeyName(),
               $roles->getKey());
         }

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Support\Collection;
 use Redsnapper\LaravelDoorman\Models\Contracts\GroupInterface;
 use Redsnapper\LaravelDoorman\Models\Contracts\PermissionContract;
-use Redsnapper\LaravelDoorman\Models\Contracts\RoleInterface;
+use Redsnapper\LaravelDoorman\Models\Contracts\RoleContract;
 
 class PermissionsRegistrar
 {
@@ -19,17 +19,20 @@ class PermissionsRegistrar
      */
     protected $permissions;
 
+    /** @var string */
     protected $roleClass;
 
+    /** @var string */
     protected $permissionClass;
 
+    /** @var string */
     protected $groupClass;
 
 
     public function __construct(Gate $gate)
     {
         $this->gate = $gate;
-        $this->roleClass = config('doorman.role_class');
+        $this->roleClass = config('doorman.models.role');
         $this->permissionClass = config('doorman.models.permission');
         $this->groupClass = config('doorman.group_class');
     }
@@ -84,9 +87,9 @@ class PermissionsRegistrar
     }
 
     /**
-     * @return RoleInterface
+     * @return RoleContract
      */
-    public function getRoleClass(): RoleInterface
+    public function getRoleClass(): RoleContract
     {
         return app($this->roleClass);
     }

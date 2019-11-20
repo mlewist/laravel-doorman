@@ -2,7 +2,7 @@
 
 namespace Redsnapper\LaravelDoorman\Models\Contracts;
 
-interface RoleInterface
+interface RoleContract
 {
     public function permissions();
 

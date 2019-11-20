@@ -3,10 +3,10 @@
 namespace Redsnapper\LaravelDoorman\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Redsnapper\LaravelDoorman\Models\Contracts\RoleInterface;
+use Redsnapper\LaravelDoorman\Models\Contracts\RoleContract;
 use Redsnapper\LaravelDoorman\Models\Contracts\UserInterface;
 use Redsnapper\LaravelDoorman\Models\Permission;
-use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Role;
+use Redsnapper\LaravelDoorman\Models\Role;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\User;
 
 class RoleTest extends TestCase
@@ -18,7 +18,7 @@ class RoleTest extends TestCase
     {
         $permissionA = factory(Permission::class)->create(["name" => "can-see-the-ground"]);
         $permissionB = factory(Permission::class)->create(["name" => "can-see-the-sky"]);
-        /** @var RoleInterface $role */
+        /** @var RoleContract $role */
         $role = factory(Role::class)->create();
         $role->givePermissionTo($permissionA);
 
@@ -33,7 +33,7 @@ class RoleTest extends TestCase
     /** @test */
     public function roles_can_be_assigned_to_a_user()
     {
-        /** @var RoleInterface $role */
+        /** @var RoleContract $role */
         $role = factory(Role::class)->create(['name' => 'My First Role']);
 
         /** @var UserInterface $user */
@@ -48,7 +48,7 @@ class RoleTest extends TestCase
     /** @test */
     public function a_role_can_have_multiple_users()
     {
-        /** @var RoleInterface $role */
+        /** @var RoleContract $role */
         $role = factory(Role::class)->create(['name' => 'Dodgy Characters']);
 
         /** @var UserInterface $user */
@@ -68,7 +68,7 @@ class RoleTest extends TestCase
     /** @test */
     public function a_user_can_have_multiple_roles()
     {
-        /** @var RoleInterface $role */
+        /** @var RoleContract $role */
         $role = factory(Role::class)->create(['name' => 'Good Actors']);
         $role2 = factory(Role::class)->create(['name' => 'Handsome Actors']);
 
@@ -88,7 +88,7 @@ class RoleTest extends TestCase
         $permission = factory(Permission::class)->create(['name' => 'act-superbly']);
         $permission2 = factory(Permission::class)->create(['name' => 'look-fantastic']);
 
-        /** @var RoleInterface $role */
+        /** @var RoleContract $role */
         $role = factory(Role::class)->create(['name' => 'Good Actors']);
         $role2 = factory(Role::class)->create(['name' => 'Handsome Actors']);
 

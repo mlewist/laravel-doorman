@@ -3,6 +3,7 @@
 namespace Redsnapper\LaravelDoorman\Models\Traits;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Redsnapper\LaravelDoorman\Guard;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 trait HasUsers
@@ -12,6 +13,6 @@ trait HasUsers
      */
     public function users()
     {
-        return $this->belongsToMany(config('doorman.user_class'));
+        return $this->belongsToMany(Guard::getModelFor());
     }
 }

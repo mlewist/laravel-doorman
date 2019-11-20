@@ -1,7 +1,7 @@
 <?php
 
 use Faker\Generator as Faker;
-use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\Role;
+use Redsnapper\LaravelDoorman\Models\Role;
 
 $factory->define(Role::class, function (Faker $faker) {
     return [
