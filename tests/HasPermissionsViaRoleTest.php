@@ -3,12 +3,13 @@
 namespace Redsnapper\LaravelDoorman\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExist;
 use Redsnapper\LaravelDoorman\Models\Contracts\UserInterface;
 use Redsnapper\LaravelDoorman\Models\Permission;
 use Redsnapper\LaravelDoorman\Models\Role;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\User;
 
-class HasRolesTest extends TestCase
+class HasPermissionsViaRoleTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -27,6 +28,11 @@ class HasRolesTest extends TestCase
      */
     protected $testRole2;
 
+    /**
+     * @var Permission
+     */
+    protected $testPermission;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -34,6 +40,7 @@ class HasRolesTest extends TestCase
         $this->testUser = factory(User::class)->create();
         $this->testRole = factory(Role::class)->create(['name'=>'Test']);
         $this->testRole2 = factory(Role::class)->create(['name'=>'Test 2']);
+        $this->testPermission = factory(Permission::class)->create(['name'=>'do-something']);
     }
 
     /** @test */
@@ -140,6 +147,41 @@ class HasRolesTest extends TestCase
         $this->testUser->syncRoles([$this->testRole, $this->testRole2]);
         $this->assertTrue($this->testUser->hasRole($this->testRole));
         $this->assertTrue($this->testUser->hasRole($this->testRole2));
+    }
+
+    /** @test */
+    public function role_can_grant_permission_to_a_user()
+    {
+        $this->testRole->givePermissionTo($this->testPermission);
+        $this->testUser->assignRole($this->testRole);
+        $this->assertTrue($this->testUser->hasPermission($this->testPermission));
+    }
+
+    /** @test */
+    public function it_throws_an_exception_when_calling_hasPermissionTo_with_an_invalid_type()
+    {
+        $this->expectException(PermissionDoesNotExist::class);
+        $this->testUser->hasPermissionTo(new \stdClass());
+    }
+
+    /** @test */
+    public function it_throws_an_exception_when_calling_hasPermissionTo_with_null()
+    {
+        $this->expectException(PermissionDoesNotExist::class);
+        $this->testUser->hasPermissionTo(null);
+    }
+
+    /** @test */
+    public function it_throws_an_exception_when_a_permission_does_not_exist()
+    {
+        $this->expectException(PermissionDoesNotExist::class);
+        $this->testUser->hasPermissionTo("does-not-exist");
+    }
+
+    /** @test */
+    public function it_can_determine_that_the_user_does_not_have_a_permission()
+    {
+        $this->assertFalse($this->testUser->hasPermissionTo('do-something'));
     }
 
 

@@ -4,7 +4,7 @@ namespace Redsnapper\LaravelDoorman\Exceptions;
 
 use InvalidArgumentException;
 
-class PermissionDoesNotExistException extends InvalidArgumentException
+class PermissionDoesNotExist extends InvalidArgumentException
 {
     public static function create(string $permissionName, string $guardName = '')
     {

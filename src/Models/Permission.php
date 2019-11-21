@@ -4,7 +4,7 @@ namespace Redsnapper\LaravelDoorman\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExistException;
+use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExist;
 use Redsnapper\LaravelDoorman\Models\Contracts\Permission as PermissionContract;
 use Redsnapper\LaravelDoorman\Models\Traits\HasRoles;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
@@ -16,14 +16,14 @@ class Permission extends Model implements PermissionContract
     /**
      * @param  string  $name
      * @return Permission|null
-     * @throws PermissionDoesNotExistException
+     * @throws PermissionDoesNotExist
      */
     public function findByName(string $name)
     {
         $permission = $this->getPermissions()->get($name);
 
         if (!$permission) {
-            throw PermissionDoesNotExistException::create($name);
+            throw PermissionDoesNotExist::create($name);
         }
 
         return $permission;

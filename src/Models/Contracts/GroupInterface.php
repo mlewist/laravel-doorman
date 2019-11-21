@@ -4,7 +4,7 @@ namespace Redsnapper\LaravelDoorman\Models\Contracts;
 
 interface GroupInterface
 {
-    public function permissions();
+
 
     public function users();
 

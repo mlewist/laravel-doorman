@@ -8,8 +8,6 @@ use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 trait HasRoles
 {
-    use HasPermissions;
-
 
     /**
      * @return BelongsToMany
@@ -33,7 +31,9 @@ trait HasRoles
 
         $this->roles()->syncWithoutDetaching($roles);
 
+        // Reload the roles for this model
         $this->load('roles');
+
 
         return $this;
     }
@@ -73,7 +73,7 @@ trait HasRoles
 
         if (is_array($roles)) {
 
-            return collect($roles)->contains(function($role){
+            return collect($roles)->contains(function ($role) {
                 return $this->hasRole($role);
             });
         }
@@ -84,9 +84,9 @@ trait HasRoles
     /**
      * Revoke the given role from the model.
      *
-     * @param string|Role $role
+     * @param  string|Role  $role
      */
-    public function removeRole($role):self
+    public function removeRole($role): self
     {
         $this->roles()->detach($this->getStoredRole($role));
         $this->load('roles');
@@ -110,12 +110,20 @@ trait HasRoles
         return $role->getKey();
     }
 
-    public function getRoleClass(): Role
+    protected function getRoleClass(): Role
     {
         if (!isset($this->roleClass)) {
             $this->roleClass = app(PermissionsRegistrar::class)->getRoleClass();
         }
         return $this->roleClass;
+    }
+
+    /**
+     * Forget the cached permissions.
+     */
+    private function forgetCachedPermissions()
+    {
+        app(PermissionsRegistrar::class)->forgetCachedPermissions();
     }
 
 }

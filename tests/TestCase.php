@@ -5,7 +5,6 @@ namespace Redsnapper\LaravelDoorman\Tests;
 use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Redsnapper\LaravelDoorman\Models\Contracts\Role as RoleContract;
-use Redsnapper\LaravelDoorman\Models\Contracts\UserInterface;
 use Redsnapper\LaravelDoorman\DoormanServiceProvider;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\User;
 
@@ -14,7 +13,7 @@ class TestCase extends OrchestraTestCase
     /** @var RoleContract */
     protected $authRole;
 
-    /** @var UserInterface */
+    /** @var User */
     protected $authUser;
 
     public function setUp(): void
@@ -47,7 +46,7 @@ class TestCase extends OrchestraTestCase
         $app['config']->set('auth.providers.users.model', User::class);
     }
 
-    protected function signIn($user = null,$region =null): UserInterface
+    protected function signIn($user = null,$region =null)
     {
         if ($this->authUser) {
             return $this->authUser;

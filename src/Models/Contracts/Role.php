@@ -6,11 +6,11 @@ interface Role
 {
     public function permissions();
 
-    public function givePermissionTo($permission);
+    //public function givePermissionTo($permission);
 
     public function removePermissionTo($permission);
 
-    public function getPermissionId($permission);
+    //public function getPermissionId($permission);
 
     public function hasPermission($permission);
 

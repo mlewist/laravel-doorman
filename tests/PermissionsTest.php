@@ -4,7 +4,7 @@ namespace Redsnapper\LaravelDoorman\Tests;
 
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExistException;
+use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExist;
 use Redsnapper\LaravelDoorman\Models\Permission;
 use Redsnapper\LaravelDoorman\Models\Role;
 
@@ -70,7 +70,7 @@ class PermissionsTest extends TestCase
     public function it_throws_a_permission_does_not_exist_for_non_existant_permissions()
     {
         $this->signIn();
-        $this->expectException(PermissionDoesNotExistException::class);
+        $this->expectException(PermissionDoesNotExist::class);
 
         $this->authUser->hasPermissionTo('non-existent');
     }

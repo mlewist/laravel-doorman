@@ -3,10 +3,9 @@
 namespace Redsnapper\LaravelDoorman\Tests\Fixtures\Models;
 
 use Illuminate\Foundation\Auth\Access\Authorizable;
-use Redsnapper\LaravelDoorman\Models\Contracts\UserInterface;
-use Redsnapper\LaravelDoorman\Models\Traits\IsUser;
+use Redsnapper\LaravelDoorman\Models\Traits\HasPermissionsViaRoles;
 
-class User extends \Illuminate\Foundation\Auth\User implements UserInterface
+class User extends \Illuminate\Foundation\Auth\User
 {
-    use IsUser, Authorizable, \Illuminate\Auth\Authenticatable;
+    use HasPermissionsViaRoles, Authorizable, \Illuminate\Auth\Authenticatable;
 }

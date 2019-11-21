@@ -5,7 +5,7 @@ namespace Redsnapper\LaravelDoorman\Models\Traits;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExistException;
+use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExist;
 use Redsnapper\LaravelDoorman\Models\Contracts\Permission;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
@@ -23,7 +23,7 @@ trait IsPermission
         $permission = $this->getPermissions()->get($name);
 
         if (!$permission) {
-            throw PermissionDoesNotExistException::create($name);
+            throw PermissionDoesNotExist::create($name);
         }
 
         return $permission;

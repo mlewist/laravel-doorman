@@ -32,7 +32,7 @@ class GroupTest extends TestCase
         $app['config']->set('doorman.group_class', Group::class);
     }
 
-    protected function signIn($user = null, $region = null): UserInterface
+    protected function signIn($user = null, $region = null)
     {
         if ($this->authUser) {
             return $this->authUser;

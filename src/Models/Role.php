@@ -3,25 +3,44 @@
 namespace Redsnapper\LaravelDoorman\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Redsnapper\LaravelDoorman\Guard;
 use Redsnapper\LaravelDoorman\Models\Contracts\Permission;
 use Redsnapper\LaravelDoorman\Models\Contracts\Role as RoleContract;
 use Redsnapper\LaravelDoorman\Models\Traits\HasPermissions;
-use Redsnapper\LaravelDoorman\Models\Traits\HasUsers;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 class Role extends Model implements RoleContract
 {
-    use HasPermissions, HasUsers;
+    use HasPermissions;
 
     /**
-     * @param  Permission|string  $permission
-     * @throws Exception
+     * @return BelongsToMany
      */
-    public function givePermissionTo($permission)
+    public function permissions()
     {
-        $permissionId = $this->getPermissionId($permission);
+        return $this->belongsToMany(app(PermissionsRegistrar::class)->getPermissionClass());
+    }
 
-        $this->permissions()->syncWithoutDetaching([$permissionId]);
+    /**
+     * @return BelongsToMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany(Guard::getModelFor());
+    }
+
+    /**
+     * @param  string|array|Permission|\Illuminate\Support\Collection  $permissions
+     */
+    public function givePermissionTo(...$permissions)
+    {
+
+        $permissions = collect($permissions)->flatten()->map(function ($permission) {
+            return $this->getPermissionId($permission);
+        })->all();
+
+        $this->permissions()->syncWithoutDetaching($permissions);
 
         $this->forgetCachedPermissions();
     }
@@ -29,9 +48,8 @@ class Role extends Model implements RoleContract
     /**
      * @param  Permission|string  $permission
      * @return string
-     * @throws Exception
      */
-    public function getPermissionId($permission): string
+    protected function getPermissionId($permission): string
     {
         if (is_string($permission)) {
             $permission = (app(PermissionsRegistrar::class)->getPermissionClass())
