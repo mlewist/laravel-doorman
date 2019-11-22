@@ -2,9 +2,7 @@
 
 namespace Redsnapper\LaravelDoorman\Tests;
 
-use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExist;
 use Redsnapper\LaravelDoorman\Models\Permission;
 use Redsnapper\LaravelDoorman\Models\Role;
 
@@ -12,66 +10,124 @@ class PermissionsTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function it_can_tell_when_a_permission_has_been_granted()
+    /**
+     * @var Role
+     */
+    protected $testRole;
+
+    /**
+     * @var Role
+     */
+    protected $testRole2;
+
+    /**
+     * @var Permission
+     */
+    protected $testPermission;
+
+
+    public function setUp(): void
     {
-        $user = $this->signIn();
+        parent::setUp();
 
-        $activityA = factory(Permission::class)->create(['name' => 'can-see-the-ground']);
-        $activityB = factory(Permission::class)->create(['name' => 'can-see-the-sky']);
-
-        $role = factory(Role::class)->create(['name' => 'Person with bad neck']);
-        $role->givePermissionTo($activityA);
-        $user->assignRole($role);
-
-        $this->assertTrue($user->hasPermissionTo($activityA->name));
-        $this->assertFalse($user->hasPermissionTo($activityB->name));
+        $this->testRole = factory(Role::class)->create(['name'=>'Test']);
+        $this->testRole2 = factory(Role::class)->create(['name'=>'Test 2']);
+        $this->testPermission = factory(Permission::class)->create(['name'=>'do-something']);
     }
 
     /** @test */
-    public function permissions_can_be_taken_away()
+    public function can_check_if_permission_has_a_role()
     {
-        $user = $this->signIn();
+        $this->assertFalse($this->testPermission->hasRole($this->testRole));
+        $this->testPermission->assignRole($this->testRole);
 
-        $activityA = factory(Permission::class)->create(['name' => 'can-swim-fast']);
-        $role = factory(Role::class)->create(['name' => 'Person with big feet']);
-        $role->givePermissionTo($activityA);
-        $user->assignRole($role);
-        $this->assertTrue($user->hasPermissionTo($activityA->name));
+        $this->assertTrue($this->testPermission->hasRole($this->testRole));
+        $this->assertTrue($this->testPermission->hasRole($this->testRole->name));
+        $this->assertTrue($this->testPermission->hasRole([$this->testRole->name, 'fakeRole']));
+        $this->assertTrue($this->testPermission->hasRole($this->testRole->id));
+        $this->assertTrue($this->testPermission->hasRole([$this->testRole->id, 'fakeRole']));
 
-        $role->removePermissionTo($activityA);
-        $this->assertFalse($user->hasPermissionTo($activityA->name));
     }
 
     /** @test */
-    public function it_throws_an_exception_when_given_a_permission_that_does_not_exist()
+    public function it_can_assign_a_role_using_a_model()
     {
-        $this->expectException(Exception::class);
-        $role = factory(Role::class)->create();
-        $role->givePermissionTo('foo');
+        $this->testPermission->hasRole($this->testRole);
+        $this->testPermission->assignRole($this->testRole);
+        $this->assertTrue($this->testPermission->hasRole($this->testRole));
     }
 
     /** @test */
-    public function permissions_can_be_checked_with_laravel_auth_guard_can()
+    public function can_assign_a_role_using_an_id()
     {
-        $activityA = factory(Permission::class)->create(['name' => 'can-fly']);
-        $activityB = factory(Permission::class)->create(['name' => 'can-run']);
-        $role = factory(Role::class)->create(['name' => 'Birdman']);
-        $role->givePermissionTo($activityA);
-
-        $user = $this->signIn();
-        $this->setAuthRole($role);
-
-        $this->assertTrue(auth()->user()->can('can-fly'));
-        $this->assertFalse(auth()->user()->can('can-run'));
+        $this->testPermission->assignRole($this->testRole->id);
+        $this->assertTrue($this->testPermission->hasRole($this->testRole));
     }
 
     /** @test */
-    public function it_throws_a_permission_does_not_exist_for_non_existant_permissions()
+    public function can_assign_a_role_by_name()
     {
-        $this->signIn();
-        $this->expectException(PermissionDoesNotExist::class);
-
-        $this->authUser->hasPermissionTo('non-existent');
+        $this->testPermission->assignRole('Test');
+        $this->assertTrue($this->testPermission->hasRole($this->testRole));
     }
+
+    /** @test */
+    public function can_assign_multiple_roles()
+    {
+        $this->testPermission->assignRole($this->testRole->id, 'Test 2');
+        $this->assertTrue($this->testPermission->hasRole($this->testRole));
+        $this->assertTrue($this->testPermission->hasRole($this->testRole2));
+    }
+
+    /** @test */
+    public function can_assign_multiple_roles_using_an_array()
+    {
+        $this->testPermission->assignRole([$this->testRole->id, 'Test 2']);
+        $this->assertTrue($this->testPermission->hasRole($this->testRole));
+        $this->assertTrue($this->testPermission->hasRole($this->testRole2));
+    }
+
+    /** @test */
+    public function it_does_not_remove_already_associated_roles_when_assigning_new_roles()
+    {
+        $this->testPermission->assignRole($this->testRole);
+        $this->testPermission->assignRole(factory(Role::class)->create());
+        $this->assertTrue($this->testPermission->fresh()->hasRole($this->testRole));
+    }
+
+    /** @test */
+    public function can_sync_roles_using_a_model()
+    {
+        $this->testPermission->assignRole($this->testRole);
+        $this->testPermission->syncRoles($this->testRole2);
+        $this->assertFalse($this->testPermission->hasRole($this->testRole));
+        $this->assertTrue($this->testPermission->hasRole($this->testRole2));
+    }
+
+    /** @test */
+    public function can_sync_roles_using_a_string()
+    {
+        $this->testPermission->assignRole($this->testRole);
+        $this->testPermission->syncRoles('Test 2');
+        $this->assertFalse($this->testPermission->hasRole($this->testRole));
+        $this->assertTrue($this->testPermission->hasRole($this->testRole2));
+    }
+
+    /** @test */
+    public function it_can_sync_multiple_roles()
+    {
+        $this->testPermission->syncRoles($this->testRole, $this->testRole2);
+        $this->assertTrue($this->testPermission->hasRole($this->testRole));
+        $this->assertTrue($this->testPermission->hasRole($this->testRole2));
+    }
+
+    /** @test */
+    public function it_can_sync_multiple_roles_from_an_array()
+    {
+        $this->testPermission->syncRoles([$this->testRole, $this->testRole2]);
+        $this->assertTrue($this->testPermission->hasRole($this->testRole));
+        $this->assertTrue($this->testPermission->hasRole($this->testRole2));
+    }
+
+
 }

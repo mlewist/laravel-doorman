@@ -24,7 +24,7 @@ interface Permission
      *
      * @return Permission
      */
-    public static function findByName(string $name): self;
+    public static function findByName(string $name): Permission;
 
     /**
      * Get the value of the model's primary key.
