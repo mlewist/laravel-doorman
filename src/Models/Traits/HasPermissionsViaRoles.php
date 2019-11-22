@@ -10,32 +10,7 @@ use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 trait HasPermissionsViaRoles
 {
-    use HasRoles;
-
-    /**
-     * @var Permission
-     */
-    private $permissionClass;
-
-    /**
-     * @param  string|Permission  $permission
-     * @return bool
-     * @throws PermissionDoesNotExist
-     */
-    public function hasPermissionTo($permission): bool
-    {
-        $permissionClass = $this->getPermissionClass();
-
-        if (is_string($permission)) {
-            $permission = $permissionClass->findByName($permission);
-        }
-
-        if (! $permission instanceof Permission) {
-            throw new PermissionDoesNotExist;
-        }
-
-        return $this->hasPermission($permission);
-    }
+    use HasRoles,HasPermissions;
 
     /**
      * Has permission
@@ -53,15 +28,4 @@ trait HasPermissionsViaRoles
             $this->roles->pluck($permissionClass->getKeyName())
           )->isNotEmpty();
     }
-
-    protected function getPermissionClass(): Permission
-    {
-        if (!isset($this->permissionClass)) {
-            $this->permissionClass = app(PermissionsRegistrar::class)->getPermissionClass();
-        }
-        return $this->permissionClass;
-    }
-
-
-
 }

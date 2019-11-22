@@ -15,12 +15,12 @@ class Permission extends Model implements PermissionContract
 
     /**
      * @param  string  $name
-     * @return Permission|null
+     * @return Permission
      * @throws PermissionDoesNotExist
      */
-    public function findByName(string $name)
+    public static function findByName(string $name):PermissionContract
     {
-        $permission = $this->getPermissions()->get($name);
+        $permission = static::getPermissions()->get($name);
 
         if (!$permission) {
             throw PermissionDoesNotExist::create($name);
@@ -34,7 +34,7 @@ class Permission extends Model implements PermissionContract
      *
      * @return Collection
      */
-    public function getPermissions(): Collection
+    public static function getPermissions(): Collection
     {
         return app(PermissionsRegistrar::class)->getPermissions();
     }

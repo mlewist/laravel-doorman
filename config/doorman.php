@@ -30,7 +30,7 @@ return [
      | Redsnapper\LaravelDoorman\Models\Contracts\RoleContract
      |
      */
-      'role' => \Redsnapper\LaravelDoorman\Models\Role::class
+      'role'       => \Redsnapper\LaravelDoorman\Models\Role::class
 
   ],
 
@@ -46,8 +46,4 @@ return [
     |
     */
   'migrations' => true,
-
-  'uses_groups' => false,
-  'group_name'  => 'Group',
-  'group_class' => '',
 ];

@@ -19,7 +19,7 @@ class Role extends Model implements RoleContract
      */
     public function permissions()
     {
-        return $this->belongsToMany(app(PermissionsRegistrar::class)->getPermissionClass());
+        return $this->belongsToMany($this->getPermissionClass());
     }
 
     /**
@@ -31,18 +31,19 @@ class Role extends Model implements RoleContract
     }
 
     /**
+     * Attach the given permissions
+     *
      * @param  string|array|Permission|\Illuminate\Support\Collection  $permissions
+     * @return Role
      */
-    public function givePermissionTo(...$permissions)
+    public function givePermissionTo(...$permissions):self
     {
 
-        $permissions = collect($permissions)->flatten()->map(function ($permission) {
-            return $this->getPermissionId($permission);
-        })->all();
-
-        $this->permissions()->syncWithoutDetaching($permissions);
+        $this->permissions()->syncWithoutDetaching($this->getStoredPermissions($permissions));
 
         $this->forgetCachedPermissions();
+
+        return $this;
     }
 
     /**
@@ -52,7 +53,7 @@ class Role extends Model implements RoleContract
     protected function getPermissionId($permission): string
     {
         if (is_string($permission)) {
-            $permission = (app(PermissionsRegistrar::class)->getPermissionClass())
+            $permission = $this->getPermissionClass()
               ->findByName($permission)->getKey();
         }
 
@@ -72,16 +73,21 @@ class Role extends Model implements RoleContract
     }
 
     /**
-     * @param $permission
-     * @throws Exception
+     * Remove the given permissions
+     *
+     * @param  Permission|Permission[]|string|string[]| $permission
+     * @return Role
      */
-    public function removePermissionTo($permission)
+    public function removePermissionTo(...$permissions):self
     {
-        $permissionId = $this->getPermissionId($permission);
 
-        $this->permissions()->detach([$permissionId]);
+        $this->permissions()->detach($this->getStoredPermissions($permissions));
+
+        $this->load('permissions');
 
         $this->forgetCachedPermissions();
+
+        return $this;
     }
 
     /**
@@ -89,11 +95,10 @@ class Role extends Model implements RoleContract
      *
      * @param  Permission|string  $permission
      * @return bool
-     * @throws Exception
      */
     public function hasPermission($permission): bool
     {
-        return $this->permissions->contains(app(PermissionsRegistrar::class)->getPermissionClass()->getKeyName(),
+        return $this->permissions->contains($this->getPermissionClass()->getKeyName(),
           $this->getPermissionId($permission));
     }
 
@@ -105,9 +110,14 @@ class Role extends Model implements RoleContract
      */
     public static function findByName(string $name): RoleContract
     {
-        $role = static::where('name', $name)->first();
+        return static::where('name', $name)->first();
+    }
 
-        return $role;
+    private function getStoredPermissions(array $permissions):array
+    {
+        return collect($permissions)->flatten()->map(function ($permission) {
+            return $this->getPermissionId($permission);
+        })->all();
     }
 
 }

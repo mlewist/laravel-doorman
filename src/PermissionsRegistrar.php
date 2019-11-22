@@ -5,7 +5,6 @@ namespace Redsnapper\LaravelDoorman;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Support\Collection;
-use Redsnapper\LaravelDoorman\Models\Contracts\GroupInterface;
 use Redsnapper\LaravelDoorman\Models\Contracts\Permission;
 use Redsnapper\LaravelDoorman\Models\Contracts\Role;
 
@@ -25,16 +24,11 @@ class PermissionsRegistrar
     /** @var string */
     protected $permissionClass;
 
-    /** @var string */
-    protected $groupClass;
-
-
     public function __construct(Gate $gate)
     {
         $this->gate = $gate;
         $this->roleClass = config('doorman.models.role');
         $this->permissionClass = config('doorman.models.permission');
-        $this->groupClass = config('doorman.group_class');
     }
 
     /**
@@ -94,17 +88,6 @@ class PermissionsRegistrar
         return app($this->roleClass);
     }
 
-    /**
-     * @return GroupInterface|null
-     */
-    public function getGroupClass(): ?GroupInterface
-    {
-        if(config('doorman.uses_groups')) {
-            return app($this->groupClass);
-        }
-
-        return null;
-    }
 
     /**
      * Ensure next time we ask for permissions they are returned from the database

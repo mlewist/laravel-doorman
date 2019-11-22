@@ -8,7 +8,7 @@ interface Role
 
     //public function givePermissionTo($permission);
 
-    public function removePermissionTo($permission);
+    //public function removePermissionTo($permission);
 
     //public function getPermissionId($permission);
 

@@ -4,7 +4,6 @@ namespace Redsnapper\LaravelDoorman\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExist;
-use Redsnapper\LaravelDoorman\Models\Contracts\UserInterface;
 use Redsnapper\LaravelDoorman\Models\Permission;
 use Redsnapper\LaravelDoorman\Models\Role;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\User;

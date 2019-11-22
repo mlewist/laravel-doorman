@@ -72,7 +72,7 @@ class TestCase extends OrchestraTestCase
     /**
      * Get role for this user
      *
-     * @return Role
+     * @return RoleContract
      */
     private function getAuthRole(): RoleContract
     {
