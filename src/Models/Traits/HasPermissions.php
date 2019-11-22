@@ -2,44 +2,133 @@
 
 namespace Redsnapper\LaravelDoorman\Models\Traits;
 
-use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExist;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Redsnapper\LaravelDoorman\Guard;
 use Redsnapper\LaravelDoorman\Models\Contracts\Permission;
+use Redsnapper\LaravelDoorman\Models\Contracts\Role as RoleContract;
+use Redsnapper\LaravelDoorman\Models\Role;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 trait HasPermissions
 {
-    /**
-     * @var Permission
-     */
-    private $permissionClass;
+    use HasPermissionsTo;
 
     /**
-     * @param  string|Permission  $permission
+     * @return BelongsToMany
+     */
+    public function permissions()
+    {
+        return $this->belongsToMany($this->getPermissionClass());
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany(Guard::getModelFor());
+    }
+
+    /**
+     * Attach the given permissions
+     *
+     * @param  string|array|Permission|\Illuminate\Support\Collection  $permissions
+     * @return Role
+     */
+    public function givePermissionTo(...$permissions): self
+    {
+        $this->permissions()->syncWithoutDetaching($this->getStoredPermissions($permissions));
+
+        $this->forgetCachedPermissions();
+
+        return $this;
+    }
+
+    /**
+     * Sync the given permissions
+     *
+     * @param  string|array|Permission|\Illuminate\Support\Collection  $permissions
+     * @return Role
+     */
+    public function syncPermissions(...$permissions): self
+    {
+        $this->permissions()->detach();
+
+        return $this->givePermissionTo($permissions);
+    }
+
+    /**
+     * Remove the given permissions
+     *
+     * @param  Permission|Permission[]|string|string[]| $permission
+     * @return Role
+     */
+    public function removePermissionTo(...$permissions): self
+    {
+
+        $this->permissions()->detach($this->getStoredPermissions($permissions));
+
+        $this->load('permissions');
+
+        $this->forgetCachedPermissions();
+
+        return $this;
+    }
+
+    /**
+     * Does this role have this permission
+     *
+     * @param  Permission|string  $permission
      * @return bool
-     * @throws PermissionDoesNotExist
      */
-    public function hasPermissionTo($permission): bool
+    public function hasPermission($permission): bool
     {
-        $permissionClass = $this->getPermissionClass();
+        return $this->permissions->contains($this->getPermissionClass()->getKeyName(),
+          $this->getPermissionId($permission));
+    }
 
+    /**
+     * Find a role by its name.
+     *
+     * @param  string  $name
+     * @return RoleContract
+     */
+    public static function findByName(string $name): RoleContract
+    {
+        return static::where('name', $name)->first();
+    }
+
+    /**
+     * @param  Permission|string  $permission
+     * @return string
+     */
+    protected function getPermissionId($permission): string
+    {
         if (is_string($permission)) {
-            $permission = $permissionClass->findByName($permission);
+            $permission = $this->getPermissionClass()
+              ->findByName($permission)->getKey();
         }
 
-        if (! $permission instanceof Permission) {
-            throw new PermissionDoesNotExist;
+        if ($permission instanceof Permission) {
+            $permission = $permission->getKey();
         }
 
-        return $this->hasPermission($permission);
+        return $permission;
     }
 
-    protected function getPermissionClass(): Permission
+    private function getStoredPermissions(array $permissions): array
     {
-        if (!isset($this->permissionClass)) {
-            $this->permissionClass = app(PermissionsRegistrar::class)->getPermissionClass();
-        }
-        return $this->permissionClass;
+        return collect($permissions)->flatten()->map(function ($permission) {
+            return $this->getPermissionId($permission);
+        })->all();
     }
 
+    /**
+     * Forget the cached permissions.
+     */
+    private function forgetCachedPermissions()
+    {
+        app(PermissionsRegistrar::class)->forgetCachedPermissions();
+    }
 
 }

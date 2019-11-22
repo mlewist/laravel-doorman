@@ -4,18 +4,25 @@ namespace Redsnapper\LaravelDoorman\Models\Contracts;
 
 interface Role
 {
+    /**
+     * A role may be given various permissions.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function permissions();
 
-    //public function givePermissionTo($permission);
-
-    //public function removePermissionTo($permission);
-
-    //public function getPermissionId($permission);
-
-    public function hasPermission($permission);
-
+    /**
+     * Get the primary key for the model.
+     *
+     * @return string
+     */
     public function getKey();
 
+    /**
+     * Get the value of the model's primary key.
+     *
+     * @return mixed
+     */
     public function getKeyName();
 
     /**

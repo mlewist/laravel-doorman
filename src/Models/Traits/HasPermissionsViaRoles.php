@@ -10,7 +10,7 @@ use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 trait HasPermissionsViaRoles
 {
-    use HasRoles,HasPermissions;
+    use HasRoles,HasPermissionsTo;
 
     /**
      * Has permission

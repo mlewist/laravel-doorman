@@ -77,15 +77,22 @@ class RoleTest extends TestCase
         $this->assertTrue($this->testRole->hasPermissionTo($permission));
     }
 
-    // TODO sync permissions
-    ////public function it_can_sync_permissions()
-    ////{
-    ////    $permission = factory(Permission::class)->create();
-    ////    $this->testRole->givePermissionTo('do-something');
-    ////    $this->testRole->syncPermissions($permission);
-    ////    $this->assertFalse($this->testRole->hasPermissionTo('do-something'));
-    ////    $this->assertTrue($this->testRole->hasPermissionTo($permission));
-    ////}
+    /** @test */
+    public function it_can_sync_permissions()
+    {
+        $permission = factory(Permission::class)->create();
+        $this->testRole->givePermissionTo('do-something');
+        $this->testRole->syncPermissions($permission);
+        $this->assertFalse($this->testRole->hasPermissionTo('do-something'));
+        $this->assertTrue($this->testRole->hasPermissionTo($permission));
+    }
+
+    /** @test */
+    public function it_throws_an_exception_when_syncing_permissions_that_do_not_exist()
+    {
+        $this->expectException(PermissionDoesNotExist::class);
+        $this->testRole->syncPermissions('permission-does-not-exist');
+    }
 
     /** @test */
     public function it_can_remove_a_permission()
@@ -127,7 +134,7 @@ class RoleTest extends TestCase
         $this->testRole->givePermissionTo($permission);
         $this->assertTrue($this->testRole->hasPermissionTo('do-something'));
     }
-    
+
     /** @test */
     public function it_does_not_throw_an_exception_when_assigning_a_permission_that_is_already_assigned()
     {
