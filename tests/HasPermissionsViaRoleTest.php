@@ -183,6 +183,59 @@ class HasPermissionsViaRoleTest extends TestCase
         $this->assertFalse($this->testUser->hasPermissionTo('do-something'));
     }
 
+    /** @test */
+    public function it_can_list_all_the_permissions_via_roles_of_user()
+    {
+        // This permission should not be included for the testUser
+        $user = factory(User::class)->create();
+        $userPermission = factory(Permission::class)->create();
+        $userRole = factory(Role::class)->create();
+        $userRole->givePermissionTo($userPermission);
+        $user->assignRole($userRole);
+
+        $permission = factory(Permission::class)->create();
+        $this->testRole->givePermissionTo($this->testPermission,$permission);
+        $this->testRole2->givePermissionTo($this->testPermission);
+        $this->testUser->assignRole($this->testRole,$this->testRole2);
+
+        $this->assertCount(2,$this->testUser->permissions);
+        $this->assertTrue($this->testUser->permissions->contains($this->testPermission));
+        $this->assertTrue($this->testUser->permissions->contains($permission));
+        $this->assertFalse($this->testUser->permissions->contains($userPermission));
+
+    }
+
+    /** @test */
+    public function can_eager_load_user_permissions()
+    {
+        $userA = $this->testUser;
+        $userB = factory(User::class)->create();
+
+        $permissionB = factory(Permission::class)->create();
+
+        $this->testRole->givePermissionTo($this->testPermission);
+        $this->testRole2->givePermissionTo($permissionB);
+        $this->testRole2->givePermissionTo($this->testPermission);
+
+        $userA->assignRole($this->testRole);
+        $userB->assignRole($this->testRole2);
+        $userB->assignRole($this->testRole);
+
+        $users = User::with('permissions')->get();
+
+        tap($users->firstWhere('id',$userA->id)->permissions,function($permissions){
+            $this->assertCount(1,$permissions);
+            $this->assertTrue($permissions->first()->is($this->testPermission));
+        });
+
+        tap($users->firstWhere('id',$userB->id)->permissions,function($permissions) use($permissionB){
+            $this->assertCount(2,$permissions);
+            $this->assertTrue($permissions->contains($this->testPermission));
+            $this->assertTrue($permissions->contains($permissionB));
+        });
+
+    }
+
 
 
 }

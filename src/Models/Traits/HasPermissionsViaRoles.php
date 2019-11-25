@@ -6,11 +6,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExist;
 use Redsnapper\LaravelDoorman\Models\Contracts\Permission;
 use Redsnapper\LaravelDoorman\Models\Contracts\Role;
+use Redsnapper\LaravelDoorman\Models\PermissionsRelation;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 trait HasPermissionsViaRoles
 {
     use HasRoles,HasPermissionsTo;
+
+    public function permissions()
+    {
+        return new PermissionsRelation($this);
+    }
 
     /**
      * Has permission
@@ -22,10 +28,6 @@ trait HasPermissionsViaRoles
     {
         $permissionClass = $this->getPermissionClass();
 
-        return $permission->roles
-          ->pluck($permissionClass->getKeyName())
-          ->intersect(
-            $this->roles->pluck($permissionClass->getKeyName())
-          )->isNotEmpty();
+        return $this->permissions->contains($permission);
     }
 }
