@@ -16,7 +16,7 @@ class DoormanServiceProvider extends ServiceProvider
           __DIR__.'/../config/doorman.php' => config_path('doorman.php'),
         ], 'doorman-config');
 
-        $this->publishes([__DIR__.'/database' => database_path()], 'doorman-migration');
+        $this->publishes([__DIR__.'/database' => database_path()], 'doorman-migrations');
 
         $this->app->singleton(PermissionsRegistrar::class, function ($app) {
             $registrar = new PermissionsRegistrar($app->make(Gate::class));

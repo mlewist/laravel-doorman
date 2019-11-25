@@ -2,50 +2,186 @@
 
 This package provides traits to use to quickly scaffold role based permissions to your laravel project.
 
+Once installed we can do the following:
+
+````php
+
+// Give a permission to a role
+$role->givePermissionTo('view users');
+
+// Assign a user to a role
+$user->assignRole($role);
+
+// Check if a user has permission to
+$user->can('view users');
+
+````
+
+Permissions are registered with Laravel's gate and so it is possible to check using any laravel gate methods.
+
 ## Installation
 
-Composer require redsnapper/laravel-doorman // tbc
+````
+composer require redsnapper/laravel-doorman
+````
 
-Publish the package and then set your permission and role models. They must implement the PermissionInterface and RoleInterface.
+The service provider will be automatically registered.
 
-Use the traits provided... IsPermission and IsRole. 
+Configuration file can be published using the artisan command.
 
-Your User model, must use the trait IsUser and implement UserInterface and the standard Laravel Authorizable contract.
+```bash
+php artisan vendor:publish --tag="doorman-config"
+````
 
-### Using groups
+## Configuration
 
-Set uses_groups to true in the config file  
-Then also set your group_name (Team, Groups, Region etc) and group_class  
-You should adjust the table and migration file names to suit, if changing from the default of 'group/s'
-
-You will need a Group class which implements GroupInterface.  
-You can use the IsGroup trait to meet the interface requirements.  
-
-Your User model should implement GroupedUserInterface, which itself extends the GroupInterface.  
-You can use the 'IsGroupedUser' trait to meet the interface requirements.
-
-Your Permission class should now implemented GroupedPermissionInterface instead, this extends PermissionInterface.  
-You can use the IsGroupedPermission trait to meet the interface requirements. 
+Configuration allows you to specify which models you would like to use for the Role and Permission. By default they use 
+models defined by the package. If extra functionality is required or you would like to use your own models then they can
+be updated here.
 
 ## Migrations
 
-The other thing that will be published are the migration files. Dont forget to run migrate. This will create tables:
+````
+php artisan migrate
+````
 
-permission_role
-permissions
-roles
-role_user
+This will run the default migrations needed. If you like to change the default migrations you can publish the migration files. 
 
-Optionally, if uses_groups is turned on in config, it will also create
+```bash
+php artisan vendor:publish --tag="doorman-migrations"
+````
 
-groups
-group_user
-group_permissions
+If you dont want any migrations to run then you can disable the migrations in the config file.
 
-It's expected that you already have your user table.
+## Basic usage
 
-## Checking permissions
+### User
 
-That should be it as Laravel auto registers providers. 
-To check whether the doorman will let a user through, use $user->hasPermissionTo(string $permission)
-Utilise this in your policies / when checking permissions.
+Add the `HasPermissionsViaRoles` trait to your `User` model.
+
+```php
+    use Illuminate\Foundation\Auth\User as Authenticatable;
+    use Redsnapper\LaravelDoorman\Models\Traits\HasPermissionsViaRoles;
+    
+    class User extends Authenticatable
+    {
+        use HasPermissionsViaRoles;
+    
+        // ...
+    }
+```
+
+A role can be assigned to any user:
+
+```php
+$user->assignRole('writer');
+
+// You can also assign multiple roles at once
+$user->assignRole('editor', 'admin');
+// or as an array
+$user->assignRole(['editor', 'admin']);
+```
+
+A role can be removed from a user:
+
+```php
+$user->removeRole('editor');
+```
+
+Roles can also be synced:
+
+```php
+// All current roles will be removed from the user and replaced by the array given
+$user->syncRoles(['editor', 'admin']);
+```
+
+You can determine if a user has a certain role:
+
+```php
+$user->hasRole($role);
+```
+
+
+Permissions and roles can be accessed from the user using the `HasPermissionsViaRoles` trait.
+
+```php
+// permissions relaitionship
+$permissions = $user->permissions;
+// roles relationship
+$roles = $user->roles
+
+```
+
+You can check if a user has a permission:
+
+```php
+$user->hasPermissionTo('edit users'); // Name of permission
+$user->hasPermissionTo($somePermission->id); // Id of permission
+$user->hasPermissionTo($somePermission); // Permission Model
+```
+
+
+
+### Permissions and roles
+
+A permission can be assigned to a role using 1 of these methods:
+
+```php
+$role->givePermissionTo($permission);
+$permission->assignRole($role);
+```
+
+Multiple permissions can be synced to a role using 1 of these methods:
+
+```php
+$role->syncPermissions($permissions);
+$permission->syncRoles($roles);
+```
+
+A permission can be removed from a role using 1 of these methods:
+
+```php
+$role->revokePermissionTo($permission);
+$permission->removeRole($role);
+```
+
+## Permission and role customization
+
+If you would like to setup your own permission and role models then you can update the configuration to use your own models.
+
+The existing doorman models can be extended or the models can use the existing traits.
+
+When implementing your own models the models must fulfil the `Role` and `Permission` Contracts.
+
+An example of a role model.
+
+```php
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+use Redsnapper\LaravelDoorman\Models\Contracts\Role as RoleContract;
+use Redsnapper\LaravelDoorman\Models\Traits\HasPermissions;
+
+class Role extends Model implements RoleContract
+{
+    use HasPermissions;
+
+}
+```
+
+An example of the permission model.
+
+```php
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+use Redsnapper\LaravelDoorman\Models\Contracts\Permission as PermissionContract;
+use Redsnapper\LaravelDoorman\Models\Traits\HasRoles;
+use Redsnapper\LaravelDoorman\Models\Traits\PermissionIsFindable;
+
+class Permission extends Model implements PermissionContract
+{
+    use HasRoles, PermissionIsFindable;
+
+}
+```
