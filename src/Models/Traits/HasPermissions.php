@@ -65,7 +65,6 @@ trait HasPermissions
      */
     public function removePermissionTo(...$permissions): self
     {
-
         $this->permissions()->detach($this->getStoredPermissions($permissions));
 
         $this->load('permissions');

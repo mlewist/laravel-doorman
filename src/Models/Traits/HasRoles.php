@@ -3,11 +3,26 @@
 namespace Redsnapper\LaravelDoorman\Models\Traits;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Collection;
 use Redsnapper\LaravelDoorman\Models\Contracts\Role;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 trait HasRoles
 {
+
+    /**
+     * Remove all current roles and set the given ones.
+     *
+     * @param  array|Role|string  ...$roles
+     * @return $this
+     */
+    public function syncRoles(...$roles)
+    {
+        $this->roles()->detach();
+        return $this->assignRole($roles);
+    }
+
+    //TODO Scope roles
 
     /**
      * @return BelongsToMany
@@ -17,7 +32,13 @@ trait HasRoles
         return $this->belongsToMany($this->getRoleClass());
     }
 
-    //TODO Scope roles
+    protected function getRoleClass(): Role
+    {
+        if (!isset($this->roleClass)) {
+            $this->roleClass = app(PermissionsRegistrar::class)->getRoleClass();
+        }
+        return $this->roleClass;
+    }
 
     /**
      * @param  Role|int  ...$roles
@@ -34,67 +55,14 @@ trait HasRoles
         // Reload the roles for this model
         $this->load('roles');
 
-
         return $this;
     }
 
     /**
-     * Remove all current roles and set the given ones.
-     *
-     * @param  array|Role|string  ...$roles
-     * @return $this
+     * @param $role
+     * @return string|int
      */
-    public function syncRoles(...$roles)
-    {
-        $this->roles()->detach();
-        return $this->assignRole($roles);
-    }
-
-    /**
-     *  Determine if the model has (one of) the given role(s).
-     *
-     * @param  string|int|array|Role|\Illuminate\Support\Collection  $roles
-     * @return bool
-     */
-    public function hasRole($roles): bool
-    {
-        if (is_string($roles)) {
-            return $this->roles->contains('name', $roles);
-        }
-
-        if ($roles instanceof Role) {
-            return $this->roles->contains($roles->getKeyName(),
-              $roles->getKey());
-        }
-
-        if (is_int($roles)) {
-            return $this->roles->contains('id', $roles);
-        }
-
-        if (is_array($roles)) {
-
-            return collect($roles)->contains(function ($role) {
-                return $this->hasRole($role);
-            });
-        }
-
-        return $roles->intersect($this->roles)->isNotEmpty();
-    }
-
-    /**
-     * Revoke the given role from the model.
-     *
-     * @param  string|Role  $role
-     */
-    public function removeRole($role): self
-    {
-        $this->roles()->detach($this->getStoredRole($role));
-        $this->load('roles');
-        $this->forgetCachedPermissions();
-        return $this;
-    }
-
-    protected function getStoredRole($role): int
+    protected function getStoredRole($role)
     {
 
         if (is_numeric($role)) {
@@ -110,12 +78,50 @@ trait HasRoles
         return $role->getKey();
     }
 
-    protected function getRoleClass(): Role
+    /**
+     *  Determine if the model has (one of) the given role(s).
+     *
+     * @param  string|int|array|Role|Collection  $roles
+     * @return bool
+     */
+    public function hasRole($roles): bool
     {
-        if (!isset($this->roleClass)) {
-            $this->roleClass = app(PermissionsRegistrar::class)->getRoleClass();
+
+        if (is_string($roles)) {
+            return ($this->roles->contains('name', $roles) || $this->roles->contains($this->getRoleClass()->getKeyName(),
+                $roles));
         }
-        return $this->roleClass;
+
+        if ($roles instanceof Role) {
+            return $this->roles->contains($roles->getKeyName(),
+              $roles->getKey());
+        }
+
+        if (is_int($roles)) {
+            return $this->roles->contains($this->getRoleClass()->getKeyName(), $roles);
+        }
+
+        if (is_array($roles)) {
+            return collect($roles)->contains(function ($role) {
+                return $this->hasRole($role);
+            });
+        }
+
+        return $roles->intersect($this->roles)->isNotEmpty();
+    }
+
+    /**
+     * Revoke the given role from the model.
+     *
+     * @param  string|Role  $role
+     * @return self
+     */
+    public function removeRole($role): self
+    {
+        $this->roles()->detach($this->getStoredRole($role));
+        $this->load('roles');
+        $this->forgetCachedPermissions();
+        return $this;
     }
 
     /**

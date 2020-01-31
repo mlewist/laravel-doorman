@@ -2,12 +2,14 @@
 
 namespace Redsnapper\LaravelDoorman\Models\Contracts;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 interface Role
 {
     /**
      * A role may be given various permissions.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function permissions();
 
@@ -31,5 +33,5 @@ interface Role
      * @param  string  $name
      * @return Role
      */
-    public static function findByName(string $name): self;
+    public static function findByName(string $name): Role;
 }
