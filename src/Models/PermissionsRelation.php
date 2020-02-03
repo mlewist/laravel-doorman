@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Redsnapper\LaravelDoorman\Models\Contracts\Role;
+use Redsnapper\LaravelDoorman\Models\Contracts\Permission;
 use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 class PermissionsRelation extends Relation
@@ -160,7 +161,7 @@ class PermissionsRelation extends Relation
     /**
      * Build model dictionary keyed by the relation's foreign key.
      *
-     * @param  \Illuminate\Database\Eloquent\Collection  $results
+     * @param  Collection  $results
      * @return array
      */
     protected function buildDictionary(Collection $results)
