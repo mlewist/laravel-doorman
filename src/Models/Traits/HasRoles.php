@@ -9,6 +9,7 @@ use Redsnapper\LaravelDoorman\PermissionsRegistrar;
 
 trait HasRoles
 {
+    private $roleClass;
 
     /**
      * Remove all current roles and set the given ones.
