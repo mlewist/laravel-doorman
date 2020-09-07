@@ -10,4 +10,12 @@ class Role extends Model implements RoleContract
 {
     use HasPermissions;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name'];
+
+
 }

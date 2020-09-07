@@ -11,4 +11,11 @@ class Permission extends Model implements PermissionContract
 {
     use HasRoles, PermissionIsFindable;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name'];
+
 }
