@@ -6,6 +6,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExist;
 use Redsnapper\LaravelDoorman\Models\Permission;
 use Redsnapper\LaravelDoorman\Models\Role;
+use Redsnapper\LaravelDoorman\Tests\Fixtures\Factories\PermissionFactory;
+use Redsnapper\LaravelDoorman\Tests\Fixtures\Factories\RoleFactory;
+use Redsnapper\LaravelDoorman\Tests\Fixtures\Factories\UserFactory;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\User;
 
 class RoleTest extends TestCase
@@ -30,9 +33,10 @@ class RoleTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->testUser = factory(User::class)->create();
-        $this->testRole = factory(Role::class)->create(['name'=>'Test']);
-        $this->testPermission = factory(Permission::class)->create(['name'=>'do-something']);
+
+        $this->testUser = UserFactory::new()->create();
+        $this->testRole = RoleFactory::new()->create(['name'=>'Test']);
+        $this->testPermission = PermissionFactory::new()->create(['name'=>'do-something']);
     }
 
     /** @test */
@@ -45,7 +49,7 @@ class RoleTest extends TestCase
     /** @test */
     public function can_be_given_a_permission()
     {
-        $permissionA = factory(Permission::class)->create(["name" => "can-see-the-ground"]);
+        $permissionA = PermissionFactory::new()->create(["name" => "can-see-the-ground"]);
         $this->testRole->givePermissionTo($permissionA);
         $this->assertTrue($this->testRole->hasPermission($permissionA->name));
     }
@@ -60,7 +64,7 @@ class RoleTest extends TestCase
     /** @test */
     public function can_be_given_multiple_permissions_using_an_array()
     {
-        $permission = factory(Permission::class)->create();
+        $permission = PermissionFactory::new()->create();
 
         $this->testRole->givePermissionTo(['do-something',$permission]);
         $this->assertTrue($this->testRole->hasPermissionTo('do-something'));
@@ -70,7 +74,7 @@ class RoleTest extends TestCase
     /** @test */
     public function it_can_be_given_multiple_permissions_using_multiple_arguments()
     {
-        $permission = factory(Permission::class)->create();
+        $permission = PermissionFactory::new()->create();
 
         $this->testRole->givePermissionTo('do-something', $permission);
         $this->assertTrue($this->testRole->hasPermissionTo('do-something'));
@@ -80,7 +84,7 @@ class RoleTest extends TestCase
     /** @test */
     public function it_can_sync_permissions()
     {
-        $permission = factory(Permission::class)->create();
+        $permission = PermissionFactory::new()->create();
         $this->testRole->givePermissionTo('do-something');
         $this->testRole->syncPermissions($permission);
         $this->assertFalse($this->testRole->hasPermissionTo('do-something'));
@@ -106,7 +110,7 @@ class RoleTest extends TestCase
     /** @test */
     public function it_can_give_and_remove_multiple_permissions()
     {
-        $permission = factory(Permission::class)->create();
+        $permission = PermissionFactory::new()->create();
         $this->testRole->givePermissionTo(['do-something', $permission]);
         $this->assertEquals(2, $this->testRole->permissions()->count());
         $this->testRole->removePermissionTo(['do-something', $permission]);
@@ -129,7 +133,7 @@ class RoleTest extends TestCase
     /** @test */
     public function it_does_not_remove_already_associated_permissions_when_assigning_new_permissions()
     {
-        $permission = factory(Permission::class)->create();
+        $permission = PermissionFactory::new()->create();
         $this->testRole->givePermissionTo('do-something');
         $this->testRole->givePermissionTo($permission);
         $this->assertTrue($this->testRole->hasPermissionTo('do-something'));

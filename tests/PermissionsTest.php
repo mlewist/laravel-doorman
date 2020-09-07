@@ -5,6 +5,8 @@ namespace Redsnapper\LaravelDoorman\Tests;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Redsnapper\LaravelDoorman\Models\Permission;
 use Redsnapper\LaravelDoorman\Models\Role;
+use Redsnapper\LaravelDoorman\Tests\Fixtures\Factories\PermissionFactory;
+use Redsnapper\LaravelDoorman\Tests\Fixtures\Factories\RoleFactory;
 
 class PermissionsTest extends TestCase
 {
@@ -30,9 +32,9 @@ class PermissionsTest extends TestCase
     {
         parent::setUp();
 
-        $this->testRole = factory(Role::class)->create(['name'=>'Test']);
-        $this->testRole2 = factory(Role::class)->create(['name'=>'Test 2']);
-        $this->testPermission = factory(Permission::class)->create(['name'=>'do-something']);
+        $this->testRole = RoleFactory::new()->create(['name'=>'Test']);
+        $this->testRole2 = RoleFactory::new()->create(['name'=>'Test 2']);
+        $this->testPermission = PermissionFactory::new()->create(['name'=>'do-something']);
     }
 
     /** @test */
@@ -91,7 +93,7 @@ class PermissionsTest extends TestCase
     public function it_does_not_remove_already_associated_roles_when_assigning_new_roles()
     {
         $this->testPermission->assignRole($this->testRole);
-        $this->testPermission->assignRole(factory(Role::class)->create());
+        $this->testPermission->assignRole(RoleFactory::new()->create());
         $this->assertTrue($this->testPermission->fresh()->hasRole($this->testRole));
     }
 

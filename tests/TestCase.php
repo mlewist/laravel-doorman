@@ -15,7 +15,7 @@ class TestCase extends OrchestraTestCase
         parent::setUp();
 
         $this->loadLaravelMigrations();
-        $this->withFactories(realpath(__DIR__.'/Fixtures/database/factories'));
+        //$this->withFactories(realpath(__DIR__.'/Fixtures/database/factories'));
     }
 
     /**

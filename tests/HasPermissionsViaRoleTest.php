@@ -6,6 +6,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Redsnapper\LaravelDoorman\Exceptions\PermissionDoesNotExist;
 use Redsnapper\LaravelDoorman\Models\Permission;
 use Redsnapper\LaravelDoorman\Models\Role;
+use Redsnapper\LaravelDoorman\Tests\Fixtures\Factories\PermissionFactory;
+use Redsnapper\LaravelDoorman\Tests\Fixtures\Factories\RoleFactory;
+use Redsnapper\LaravelDoorman\Tests\Fixtures\Factories\UserFactory;
 use Redsnapper\LaravelDoorman\Tests\Fixtures\Models\User;
 
 class HasPermissionsViaRoleTest extends TestCase
@@ -36,17 +39,17 @@ class HasPermissionsViaRoleTest extends TestCase
     {
         parent::setUp();
 
-        $this->testUser = factory(User::class)->create();
-        $this->testRole = factory(Role::class)->create(['name'=>'Test']);
-        $this->testRole2 = factory(Role::class)->create(['name'=>'Test 2']);
-        $this->testPermission = factory(Permission::class)->create(['name'=>'do-something']);
+        $this->testUser = UserFactory::new()->create();
+        $this->testRole = RoleFactory::new()->create(['name'=>'Test']);
+        $this->testRole2 = RoleFactory::new()->create(['name'=>'Test 2']);
+        $this->testPermission = PermissionFactory::new()->create(['name'=>'do-something']);
     }
 
     /** @test */
     public function can_check_if_user_has_a_role()
     {
         $this->assertFalse($this->testUser->hasRole($this->testRole));
-        $role = factory(Role::class)->create();
+        $role = RoleFactory::new()->create();
         $this->assertFalse($this->testUser->hasRole($role));
         $this->testUser->assignRole($role);
 
@@ -111,7 +114,7 @@ class HasPermissionsViaRoleTest extends TestCase
     public function it_does_not_remove_already_associated_roles_when_assigning_new_roles()
     {
         $this->testUser->assignRole($this->testRole);
-        $this->testUser->assignRole(factory(Role::class)->create());
+        $this->testUser->assignRole(RoleFactory::new()->create());
         $this->assertTrue($this->testUser->fresh()->hasRole($this->testRole));
     }
 
@@ -187,13 +190,13 @@ class HasPermissionsViaRoleTest extends TestCase
     public function it_can_list_all_the_permissions_via_roles_of_user()
     {
         // This permission should not be included for the testUser
-        $user = factory(User::class)->create();
-        $userPermission = factory(Permission::class)->create();
-        $userRole = factory(Role::class)->create();
+        $user = UserFactory::new()->create();
+        $userPermission = PermissionFactory::new()->create();
+        $userRole = RoleFactory::new()->create();
         $userRole->givePermissionTo($userPermission);
         $user->assignRole($userRole);
 
-        $permission = factory(Permission::class)->create();
+        $permission = PermissionFactory::new()->create();
         $this->testRole->givePermissionTo($this->testPermission,$permission);
         $this->testRole2->givePermissionTo($this->testPermission);
         $this->testUser->assignRole($this->testRole,$this->testRole2);
@@ -209,9 +212,9 @@ class HasPermissionsViaRoleTest extends TestCase
     public function can_eager_load_user_permissions()
     {
         $userA = $this->testUser;
-        $userB = factory(User::class)->create();
+        $userB = UserFactory::new()->create();
 
-        $permissionB = factory(Permission::class)->create();
+        $permissionB = PermissionFactory::new()->create();
 
         $this->testRole->givePermissionTo($this->testPermission);
         $this->testRole2->givePermissionTo($permissionB);
