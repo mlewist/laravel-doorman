@@ -22,7 +22,7 @@ Permissions are registered with Laravel's gate and so it is possible to check us
 ## Installation
 
 ````
-composer require redsnapper/laravel-doorman
+composer require rs/laravel-doorman
 ````
 
 The service provider will be automatically registered.
